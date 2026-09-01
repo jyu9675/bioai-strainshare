@@ -19,5 +19,11 @@ keywords:
   - inStrain
   - cervicovaginal
   - gut microbiome
+version: 0.1.0
 license: MIT
-date-released: 2026-08-31
+repository-code: "https://github.com/jyu9675/bioai-strainshare"
+date-released: 2026-09-01
+# After minting a Zenodo DOI, add it here:
+# identifiers:
+#   - type: doi
+#     value: 10.5281/zenodo.XXXXXXX

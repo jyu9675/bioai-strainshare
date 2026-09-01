@@ -1,0 +1,22 @@
+{
+  "title": "strainshare: a standardized, contamination-aware framework for gut-cervicovaginal bacterial strain sharing",
+  "description": "A versioned, reference-based standard for strain-sharing analysis between the gut and the female genital tract. Packages a population-aware shared-strain call, a within-vs-between-person null, a translocation-vs-contamination discriminator, a generalist-strain filter, longitudinal-only transmission-direction inference, and a low-biomass StrainGE fallback. Includes real-read benchmarks establishing a ~10x confidence floor and a species-agnostic ~0.1% divergence resolution limit, and a validation on a public pregnancy cohort (PRJNA288562).",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "keywords": [
+    "metagenomics",
+    "strain sharing",
+    "microbiome",
+    "inStrain",
+    "popANI",
+    "cervicovaginal microbiome",
+    "gut microbiome",
+    "transmission inference",
+    "bacterial vaginosis"
+  ],
+  "creators": [
+    { "name": "Yu, Jean" },
+    { "name": "Kwon, Douglas S.", "affiliation": "Ragon Institute of Mass General Brigham, MIT, and Harvard" }
+  ]
+}
