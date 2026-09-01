@@ -27,6 +27,8 @@ scripts/
   10_benchmark.py              Study D Fig 3: coverage-sweep + reads validation (--from-reads) + precision edge (--precision-edge)
   10b_reads_benchmark.sh       real reads validation: same vs 0.3%-diverged strain across coverage (Unix)
   10c_reads_benchmark_scaled.sh  scaled precision edge: 3 species × near-boundary divergence × reps (Unix, resumable)
+  04b_between_person_compare.sh  pairwise between-person null for F1/F5 (all-N compare OOMs; Unix, resumable)
+  plot_popani_breadth.py       diagnostic: popANI × breadth by pair class (confident-call box QC)
   03b_strainge_fallback.sh     M3: low-biomass StrainGE fallback (scaffold, Unix-only)
   strainshare.py               unified config-driven analysis runner (05→09→08→06; cross-platform)
   strainshare_config.py        the STANDARD — single source of truth for every threshold

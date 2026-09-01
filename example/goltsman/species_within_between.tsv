@@ -1,0 +1,9 @@
+genome	within_shared_rate	within_n_shared	within_n_pairs	between_shared_rate	between_n_shared	between_n_pairs	within_minus_between
+B_fragilis.fna	0.0	0	3	0.0	0.0	0.0	0.0
+F_prausnitzii.fna	0.0	0	6	0.0	0.0	0.0	0.0
+G_vaginalis.fna	0.0	0	9	0.0	0.0	0.0	0.0
+L_crispatus.fna	0.0	0	9	0.0	0.0	0.0	0.0
+L_iners.fna	0.0	0	12	0.0	0.0	0.0	0.0
+L_jensenii.fna	0.0	0	9	0.0	0.0	0.0	0.0
+P_bivia.fna	0.0	0	12	0.0	0.0	1.0	0.0
+P_vulgatus.fna	0.0	0	6	0.0	0.0	0.0	0.0
