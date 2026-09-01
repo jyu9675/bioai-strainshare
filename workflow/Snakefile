@@ -1,47 +1,102 @@
 # ============================================================================
-# M6 — portable Snakemake workflow  [SCAFFOLD]
+# strainshare — portable Snakemake workflow
 # ============================================================================
-# Wraps the numbered scripts into a reproducible DAG so any cohort runs with one
-# `snakemake` invocation. Heavy rules (map/profile/compare/metaphlan) need the Unix
-# `bioai` conda env; the analysis rules are pure-Python and cross-platform.
+# FASTQ + a sample sheet  ->  map/profile -> compare -> MetaPhlAn -> `strainshare analyze`
+#   -> pairs_tagged, species_within_between, translocation_candidates(_scored),
+#      genome_generalist_flags, direction_calls, figures/.
 #
-# This is a scaffold: it encodes the intended dependency graph. Fill sample wiring
-# (SAMPLES from metadata) before production use.
+# Heavy rules need the `bioai` conda env (environment.yml): bowtie2, samtools, inStrain,
+# metaphlan. The analyze rule needs the `strainshare` package (pip install .).
 #
-#   snakemake -j8 --use-conda           # dry-run first with -n
+#   snakemake -j8 --configfile workflow/config.yaml -n     # dry-run first
+#   snakemake -j8 --configfile workflow/config.yaml
 # ----------------------------------------------------------------------------
-configfile: "workflow/config.yaml"   # points at data/refs/results paths + strainshare_standard.yaml
+import pandas as pd
 
-RESULTS = config.get("results_dir", "results")
+configfile: "workflow/config.yaml"
+
+RES = config["results_dir"]
+REF = config["refs_prefix"]                 # <REF>.fna, <REF>.stb, and bowtie2 index <REF>.*.bt2 must exist
+THREADS = config.get("threads", 8)
+STD = config.get("standard", "")
+
+samples = pd.read_csv(config["samples"], sep="\t", dtype=str).set_index("sample", drop=False)
+SAMPLES = list(samples.index)
+
 
 rule all:
     input:
-        f"{RESULTS}/direction_calls.tsv",
-        f"{RESULTS}/genome_generalist_flags.tsv",
-        f"{RESULTS}/figures/fig1_within_vs_between.png",
+        f"{RES}/direction_calls.tsv",
+        f"{RES}/genome_generalist_flags.tsv",
+        f"{RES}/figures/fig1_within_vs_between.png",
 
-# --- heavy, Unix-only (profiles -> compare -> metaphlan) are shelled out to the
-#     existing numbered scripts to avoid duplicating tested logic ---
+
+rule metadata:
+    output: f"{RES}/metadata.tsv"
+    run:
+        samples[["sample", "subject", "timepoint", "bodysite"]].to_csv(output[0], sep="\t", index=False)
+
+
+rule map_profile:
+    input:
+        fq1=lambda w: samples.loc[w.sample, "fq1"],
+        fq2=lambda w: samples.loc[w.sample, "fq2"],
+    output:
+        directory(f"{RES}/profiles/{{sample}}.IS")
+    threads: THREADS
+    shell:
+        r"""
+        bowtie2 -x {REF} -1 {input.fq1} -2 {input.fq2} -p {threads} 2>/dev/null \
+          | samtools sort -@2 -o {RES}/profiles/{wildcards.sample}.bam - \
+          && samtools index {RES}/profiles/{wildcards.sample}.bam
+        inStrain profile {RES}/profiles/{wildcards.sample}.bam {REF}.fna \
+          -o {output} -s {REF}.stb -p {threads} --database_mode
+        rm -f {RES}/profiles/{wildcards.sample}.bam*
+        """
+
+
 rule compare:
-    output: f"{RESULTS}/compare.IS/output/genomeWide_compare.tsv"
-    params: prof=f"{RESULTS}/profiles", refs=config["refs_dir"], threads=config.get("threads", 8)
-    shell:  "bash scripts/04_compare.sh {params.prof} {params.refs} {RESULTS}/compare.IS {params.threads}"
+    # NOTE: all-N `inStrain compare` can exhaust memory on large cohorts. A chunked/streaming
+    # compare that scales is the Item-3 work; for moderate cohorts this standard path is correct.
+    input:
+        expand(f"{RES}/profiles/{{s}}.IS", s=SAMPLES)
+    output:
+        f"{RES}/compare.IS/output/compare.IS_genomeWide_compare.tsv"
+    threads: THREADS
+    shell:
+        "inStrain compare -i {input} -o {RES}/compare.IS -s {REF}.stb -p {threads} --database_mode"
+
 
 rule metaphlan:
-    output: f"{RESULTS}/metaphlan/merged_metaphlan.tsv"
-    params: data=config["fastq_dir"], threads=config.get("threads", 8)
-    shell:  "bash scripts/07_metaphlan.sh {params.data} {RESULTS}/metaphlan {params.threads}"
+    input:
+        fq1=lambda w: samples.loc[w.sample, "fq1"],
+        fq2=lambda w: samples.loc[w.sample, "fq2"],
+    output:
+        f"{RES}/metaphlan/{{sample}}.profile.tsv"
+    threads: THREADS
+    shell:
+        "metaphlan {input.fq1},{input.fq2} --input_type fastq "
+        "--bowtie2out {RES}/metaphlan/{wildcards.sample}.bt2.bz2 -o {output} --nproc {threads}"
 
-# --- analysis half: config-driven, cross-platform ---
-rule analysis:
+
+rule merge_metaphlan:
+    input:
+        expand(f"{RES}/metaphlan/{{s}}.profile.tsv", s=SAMPLES)
+    output:
+        f"{RES}/metaphlan/merged_metaphlan.tsv"
+    shell:
+        "merge_metaphlan_tables.py {input} > {output}"
+
+
+rule analyze:
     input:
         compare=rules.compare.output,
-        mpa=rules.metaphlan.output,
-        meta=config["metadata"],
+        mpa=rules.merge_metaphlan.output,
+        meta=rules.metadata.output,
     output:
-        f"{RESULTS}/direction_calls.tsv",
-        f"{RESULTS}/genome_generalist_flags.tsv",
-        f"{RESULTS}/figures/fig1_within_vs_between.png",
+        f"{RES}/direction_calls.tsv",
+        f"{RES}/genome_generalist_flags.tsv",
+        f"{RES}/figures/fig1_within_vs_between.png",
     shell:
-        "python scripts/strainshare.py --compare {input.compare} --meta {input.meta} "
-        "--metaphlan {input.mpa} --outdir " + RESULTS
+        "strainshare analyze --compare {input.compare} --meta {input.meta} "
+        "--metaphlan {input.mpa} --outdir " + RES + ((" --config " + STD) if STD else "")

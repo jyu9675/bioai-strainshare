@@ -1,0 +1,22 @@
+# The strainshare STANDARD (machine-readable mirror of strainshare_config.py::STANDARD).
+# Edit here to override defaults; bump spec_version on any change so results stay traceable.
+spec_version: "0.1.0"
+
+shared_strain:
+  popani_primary:   0.999      # lead shared-strain call
+  popani_canonical: 0.99999    # inStrain canonical bar, always reported alongside
+  breadth_min:      0.5        # percent_genome_compared floor
+  coverage_min:     5          # per-sample coverage floor (profiling)
+
+contamination:
+  bray_curtis_similar_max: 0.5 # BC distance below this = similar community = contamination-like
+
+generalist_filter:
+  between_shared_rate_max: 0.10 # genome shared in >10% of between-person pairs => generalist/artifact
+
+direction:
+  require_longitudinal: true    # never infer direction from a sharing call
+  min_timepoints:       2
+
+low_biomass:
+  strainge_fallback_coverage_min: 0.5  # route sub-threshold targets through StrainGE (M3)

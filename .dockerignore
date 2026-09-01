@@ -1,0 +1,14 @@
+.git
+data
+results
+refs
+example
+docs
+scripts
+workflow
+tests
+*.html
+.github
+__pycache__
+*.pyc
+.pytest_cache

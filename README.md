@@ -1,10 +1,55 @@
-# BIOAI — Gut↔Vaginal Strain Sharing Pilot
+# strainshare
 
-Pilot strain-transmission analysis on the public Goltsman/DiGiulio pregnancy cohort
-(**PRJNA288562**), as a pipeline shakedown before the 191-sample paired V–R cohort.
+[![CI](https://github.com/jyu9675/bioai-strainshare/actions/workflows/ci.yml/badge.svg)](https://github.com/jyu9675/bioai-strainshare/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](pyproject.toml)
 
-See [docs/strain_pilot_plan.md](docs/strain_pilot_plan.md) for the full rationale, thresholds, and figures,
-and [docs/ONBOARDING.md](docs/ONBOARDING.md) for a lab-member quick start.
+**A standardized, contamination-aware framework for cross-body-site bacterial strain sharing**
+(e.g. <kbd>gut ↔ cervicovaginal</kbd>). It wraps inStrain/StrainGE with a *versioned threshold
+standard*, a within-vs-between-person null, a translocation-vs-contamination discriminator, a
+generalist-strain filter, longitudinal-only transmission-direction inference, and a low-biomass
+fallback — so shared-strain calls are **comparable across studies and labs**, the way VALENCIA
+standardized vaginal community-state typing.
+
+📖 [Install](docs/install.md) · [Tutorial](docs/tutorial.md) · [Lab onboarding](docs/ONBOARDING.md) ·
+[The standard](strainshare/strainshare_standard.yaml) · [Manuscript draft](docs/manuscript-draft.md)
+
+## Install
+```bash
+pip install .                 # or  pip install -e ".[dev]"  for development
+strainshare version
+strainshare benchmark --selftest   # validate the install in seconds, no data needed
+```
+The pure-Python analysis (`analyze`, `benchmark`, `diagnostic`) runs anywhere. Heavy steps
+(mapping/profiling/MetaPhlAn) additionally need the conda stack: `conda env create -f environment.yml`.
+
+## Quickstart
+```bash
+# Analysis half (cross-platform): compare table + metadata + community table -> tables + figures
+strainshare analyze --compare compare.tsv --meta metadata.tsv --metaphlan community.tsv --outdir results
+
+# Whole pipeline from FASTQ (needs the conda env): edit workflow/{config.yaml,samples.tsv}, then
+snakemake -j8 --configfile workflow/config.yaml
+```
+
+`metadata.tsv` columns: `sample  subject  timepoint  bodysite` (bodysite ∈ {vagina, gut, oral}).
+Outputs: `pairs_tagged`, `species_within_between`, `translocation_candidates(_scored)`,
+`genome_generalist_flags`, `direction_calls`, and `figures/`. See the [tutorial](docs/tutorial.md).
+
+> **Note on the codebase.** The canonical, installable, tested implementation is the
+> [`strainshare/`](strainshare) Python package (used by the CLI, the Snakemake workflow, and CI).
+> The numbered `scripts/` are the original pilot pipeline (heavy WSL steps + reference); folding
+> their remaining logic fully into the package is tracked as Item 3. Both share one threshold
+> standard.
+
+---
+
+## Pilot provenance
+
+This repo began as a pilot on the public Goltsman/DiGiulio pregnancy cohort
+(**PRJNA288562**), a shakedown before a 191-sample paired vaginal–rectal cohort.
+See [docs/strain_pilot_plan.md](docs/strain_pilot_plan.md) for the rationale/thresholds and
+[docs/goltsman-cohort-findings.md](docs/goltsman-cohort-findings.md) for the cohort result.
 
 ## Layout
 ```

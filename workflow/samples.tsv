@@ -1,0 +1,5 @@
+sample	subject	timepoint	bodysite	fq1	fq2
+S1_vagina_wk30	S1	30	vagina	data/S1_vagina_30_1.fq.gz	data/S1_vagina_30_2.fq.gz
+S1_gut_wk30	S1	30	gut	data/S1_gut_30_1.fq.gz	data/S1_gut_30_2.fq.gz
+S2_vagina_wk30	S2	30	vagina	data/S2_vagina_30_1.fq.gz	data/S2_vagina_30_2.fq.gz
+S2_gut_wk30	S2	30	gut	data/S2_gut_30_1.fq.gz	data/S2_gut_30_2.fq.gz

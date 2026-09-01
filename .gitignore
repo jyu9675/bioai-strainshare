@@ -54,3 +54,9 @@ Thumbs.db
 *.swp
 .idea/
 .vscode/
+
+# python build
+*.egg-info/
+build/
+dist/
+.pytest_cache/
