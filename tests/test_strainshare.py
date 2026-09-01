@@ -129,3 +129,44 @@ def test_plots_smoke(synthetic, tmp_path):
     import os
     assert os.path.exists(p)
     assert len(conf) >= 0
+
+
+# ---------- Item 4: arbitrary site pairs ----------
+@pytest.fixture
+def oral_gut():
+    """Same planted structure but sites are oral<->gut, to prove site-pair generalization."""
+    rows = []
+    for subj in ["P1", "P2"]:
+        for site in ["oral", "gut"]:
+            for wk in [1, 8]:
+                rows.append(dict(sample=f"{subj}_{site}_{wk}", subject=subj, timepoint=wk, bodysite=site))
+    meta = pd.DataFrame(rows)
+    species = ["Strep_mutans", "B_fragilis"]
+    mpa = pd.DataFrame(0.0, index=species, columns=meta["sample"])
+    for c in meta["sample"]:
+        if "oral" in c:
+            mpa.loc["Strep_mutans", c] = 60
+        else:
+            mpa.loc["B_fragilis", c] = 60
+
+    def row(g, a, b, pop, br=0.8):
+        return dict(genome=g, name1=a, name2=b, popANI=pop, percent_genome_compared=br)
+
+    C = [
+        row("Strep_mutans", "P1_oral_8", "P1_gut_8", 0.99996),   # within-person oral<->gut shared
+        row("Strep_mutans", "P1_oral_1", "P1_oral_8", 0.99999),  # oral over time -> direction
+        row("Strep_mutans", "P1_oral_8", "P2_gut_8", 0.9960),    # between, not shared
+    ]
+    return pd.DataFrame(C), meta, mpa
+
+
+def test_site_pair_generalization(oral_gut):
+    compare, meta, mpa = oral_gut
+    cfg = dict(STANDARD)
+    cfg["site_pair"] = ["oral", "gut"]
+    out = analysis.analyze(compare, meta, mpa, cfg)
+    # class label follows the configured sites
+    assert "within_oral_gut" in set(out["pairs_tagged"].pair_class)
+    # oral<->gut shared strain detected and oriented oral_to_gut (oral wk1 precedes gut wk8)
+    d = direction.run(out["translocation_candidates"], out["pairs_tagged"], meta, cfg)
+    assert (d.direction == "oral_to_gut").any()

@@ -12,22 +12,26 @@ import sys
 import pandas as pd
 
 from . import __version__
-from .config import SPEC_VERSION, load_config
+from .config import SPEC_VERSION, load_config, site_classes
 from . import analysis, generalist, direction, plots, benchmark
 
 
 def _cmd_analyze(a):
     cfg = load_config(a.config)
+    if a.site_pair:
+        cfg = dict(cfg)
+        cfg["site_pair"] = [s.strip() for s in a.site_pair.split(",")]
+    _, _, within_cls, _ = site_classes(cfg)
     out = analysis.analyze_files(a.compare, a.meta, a.metaphlan, a.outdir, cfg)
     generalist.run_files(f"{a.outdir}/pairs_tagged.tsv", a.outdir, cfg,
                          candidates_path=f"{a.outdir}/translocation_candidates.tsv")
     direction.run_files(f"{a.outdir}/translocation_candidates.tsv",
                         f"{a.outdir}/pairs_tagged.tsv", a.meta, a.outdir, cfg)
     meta = pd.read_csv(a.meta, sep="\t")
-    plots.all_figures(out["pairs_tagged"], out["translocation_candidates"], meta, f"{a.outdir}/figures")
+    plots.all_figures(out["pairs_tagged"], out["translocation_candidates"], meta, f"{a.outdir}/figures", cfg=cfg)
     p = out["pairs_tagged"]
     cand = out["translocation_candidates"]
-    n_shared = int(p[p.pair_class == "within_gut_vagina"].shared_strain.sum()) if len(p) else 0
+    n_shared = int(p[p.pair_class == within_cls].shared_strain.sum()) if len(p) else 0
     n_transloc = int((cand.verdict == "translocation_candidate").sum()) if "verdict" in cand.columns else 0
     n_contam = int((cand.verdict == "contamination_suspect").sum()) if "verdict" in cand.columns else 0
     print(f"[analyze] {len(p)} pairs | within-person cross-site shared: {n_shared} | "
@@ -75,6 +79,8 @@ def build_parser():
     a.add_argument("--metaphlan", required=True, help="community table (rows=features, cols=samples)")
     a.add_argument("--outdir", default="results")
     a.add_argument("--config", default=None)
+    a.add_argument("--site-pair", dest="site_pair", default=None,
+                   help="override the two body sites, e.g. 'oral,gut' or 'donor,recipient'")
     a.set_defaults(func=_cmd_analyze)
 
     b = sub.add_parser("benchmark", help="coverage-sweep / precision-edge benchmarks")

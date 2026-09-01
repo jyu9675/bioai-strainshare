@@ -12,6 +12,10 @@ SPEC_VERSION = "0.1.0"
 
 STANDARD = {
     "spec_version": SPEC_VERSION,
+    # the two body sites compared for cross-site sharing. Works for any pair present in the
+    # metadata `bodysite` column: ["gut","vagina"], ["oral","gut"], ["mother","infant"],
+    # ["donor","recipient"] (FMT), etc. Class/direction labels are derived from these names.
+    "site_pair": ["gut", "vagina"],
     "shared_strain": {
         "popani_primary": 0.999,      # lead call (matches the pilot deck)
         "popani_canonical": 0.99999,  # inStrain canonical "same strain" — reported alongside
@@ -35,6 +39,14 @@ STANDARD = {
 
 # YAML mirror shipped inside the package
 _YAML_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "strainshare_standard.yaml")
+
+
+def site_classes(cfg):
+    """Return (site_a, site_b, within_class, between_class) derived from cfg['site_pair'].
+    For the default ["gut","vagina"] this yields the historical names within_gut_vagina /
+    between_gut_vagina, so existing outputs are unchanged."""
+    a, b = cfg.get("site_pair", ["gut", "vagina"])
+    return a, b, f"within_{a}_{b}", f"between_{a}_{b}"
 
 
 def _deep_update(base, override):

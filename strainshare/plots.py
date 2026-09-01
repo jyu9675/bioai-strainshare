@@ -1,5 +1,5 @@
 """Figures: within/between null, translocation-vs-contamination plane, directionality
-timeline, and the popANI x breadth diagnostic."""
+timeline, and the popANI x breadth diagnostic. All site-pair-aware via cfg."""
 import os
 
 import numpy as np
@@ -8,21 +8,25 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from .config import STANDARD
+from .config import STANDARD, site_classes
 
 POPANI = STANDARD["shared_strain"]["popani_primary"]
 BC_SIMILAR = STANDARD["contamination"]["bray_curtis_similar_max"]
 BREADTH_MIN = STANDARD["shared_strain"]["breadth_min"]
+_COL_A = "#4c9eb0"   # site A (e.g. gut)
+_COL_B = "#d1495b"   # site B (e.g. vagina)
+_FLOOR = 1e-5
 
 
-def fig1(pairs, outdir):
-    sig = pairs[pairs.pair_class.isin(["within_gut_vagina", "between_gut_vagina"])].copy()
+def fig1(pairs, outdir, cfg=None):
+    cfg = cfg or STANDARD
+    a, b, within_cls, between_cls = site_classes(cfg)
+    sig = pairs[pairs.pair_class.isin([within_cls, between_cls])].copy()
     sig = sig[sig.popANI.notna()]
     species = list(sig.genome.unique())
     fig, ax = plt.subplots(figsize=(max(6, len(species) * 1.2), 5))
     for i, sp in enumerate(species):
-        for cls, dx, col in [("within_gut_vagina", -0.15, "#d1495b"),
-                             ("between_gut_vagina", 0.15, "#4c9eb0")]:
+        for cls, dx, col in [(within_cls, -0.15, _COL_B), (between_cls, 0.15, _COL_A)]:
             y = sig[(sig.genome == sp) & (sig.pair_class == cls)].popANI.values
             if len(y):
                 ax.scatter(np.full(len(y), i + dx) + np.random.uniform(-0.05, 0.05, len(y)),
@@ -31,15 +35,17 @@ def fig1(pairs, outdir):
     ax.set_xticks(range(len(species)))
     ax.set_xticklabels([s.split("/")[-1][:20] for s in species], rotation=40, ha="right", fontsize=8)
     ax.set_ylabel("popANI")
-    ax.set_title("Fig 1 — within (red) vs between (blue) person, gut↔vagina")
+    ax.set_title(f"Fig 1 — within (red) vs between (blue) person, {a}↔{b}")
     ax.legend(fontsize=8, loc="lower left")
     fig.tight_layout()
     fig.savefig(f"{outdir}/fig1_within_vs_between.png", dpi=150)
     plt.close(fig)
 
 
-def fig2(pairs, outdir):
-    gv = pairs[pairs.pair_class == "within_gut_vagina"].copy()
+def fig2(pairs, outdir, cfg=None):
+    cfg = cfg or STANDARD
+    _, _, within_cls, _ = site_classes(cfg)
+    gv = pairs[pairs.pair_class == within_cls].copy()
     gv = gv[gv.popANI.notna() & gv.bray_curtis.notna()]
     fig, ax = plt.subplots(figsize=(6, 5))
     sh = gv[gv.shared_strain]
@@ -60,7 +66,9 @@ def fig2(pairs, outdir):
     plt.close(fig)
 
 
-def fig3(cand, meta, outdir):
+def fig3(cand, meta, outdir, cfg=None):
+    cfg = cfg or STANDARD
+    site_a, site_b, _, _ = site_classes(cfg)
     tr = cand[cand.verdict == "translocation_candidate"].copy() if "verdict" in cand.columns else cand.copy()
     if tr.empty:
         print("Fig 3 skipped: no translocation candidates.")
@@ -69,38 +77,36 @@ def fig3(cand, meta, outdir):
     fig, ax = plt.subplots(figsize=(7, max(3, 0.5 * len(tr))))
     for i, (_, r) in enumerate(tr.iterrows()):
         t1, t2 = meta.loc[r.s1].timepoint, meta.loc[r.s2].timepoint
-        site1, site2 = meta.loc[r.s1].bodysite, meta.loc[r.s2].bodysite
+        s1, s2 = meta.loc[r.s1].bodysite, meta.loc[r.s2].bodysite
         ax.plot([t1, t2], [i, i], color="#888", lw=1, zorder=1)
-        for t, site in [(t1, site1), (t2, site2)]:
-            ax.scatter(t, i, s=60, zorder=2, color="#d1495b" if site == "vagina" else "#4c9eb0")
+        for t, site in [(t1, s1), (t2, s2)]:
+            ax.scatter(t, i, s=60, zorder=2, color=_COL_B if site == site_b else _COL_A)
         ax.text(-0.02, i, f"{r.subject1} · {r.genome.split('/')[-1][:16]}",
                 ha="right", va="center", fontsize=7, transform=ax.get_yaxis_transform())
     ax.set_yticks([])
     ax.set_xlabel("timepoint")
-    ax.set_title("Fig 3 — gut (blue) vs vagina (red) first appearance per shared strain")
+    ax.set_title(f"Fig 3 — {site_a} (blue) vs {site_b} (red) first appearance per shared strain")
     fig.tight_layout()
     fig.savefig(f"{outdir}/fig3_directionality.png", dpi=150)
     plt.close(fig)
 
 
-def all_figures(pairs, cand, meta, outdir, seed=0):
+def all_figures(pairs, cand, meta, outdir, cfg=None, seed=0):
     os.makedirs(outdir, exist_ok=True)
     np.random.seed(seed)
-    fig1(pairs, outdir)
-    fig2(pairs, outdir)
-    fig3(cand, meta, outdir)
+    fig1(pairs, outdir, cfg)
+    fig2(pairs, outdir, cfg)
+    fig3(cand, meta, outdir, cfg)
 
 
-# ---- popANI x breadth diagnostic (confident-call box) ----
-_STYLE = {
-    "within_same_site":  ("#2a7d46", "o", "within, same site over time (positive control)"),
-    "within_gut_vagina": ("#c0563b", "o", "within-person gut↔vagina (the signal)"),
-    "between_gut_vagina": ("#2a5d9c", "X", "between-person gut↔vagina (the null)"),
-}
-_FLOOR = 1e-5
-
-
-def popani_breadth(pairs, out, title=""):
+def popani_breadth(pairs, out, title="", cfg=None):
+    cfg = cfg or STANDARD
+    a, b, within_cls, between_cls = site_classes(cfg)
+    style = {
+        "within_same_site":  ("#2a7d46", "o", "within, same site over time (positive control)"),
+        within_cls:          ("#c0563b", "o", f"within-person {a}↔{b} (the signal)"),
+        between_cls:         ("#2a5d9c", "X", f"between-person {a}↔{b} (the null)"),
+    }
     d = pairs[pairs.popANI.notna()].copy()
     d["bx"] = d["breadth"].clip(lower=_FLOOR)
     fig, ax = plt.subplots(figsize=(8, 5.5))
@@ -109,7 +115,7 @@ def popani_breadth(pairs, out, title=""):
     ax.axhline(POPANI, color="grey", ls="--", lw=1)
     ax.text(BREADTH_MIN * 1.1, 0.9702, f"breadth floor {BREADTH_MIN}", fontsize=8, color="grey", rotation=90, va="bottom")
     ax.text(_FLOOR * 1.3, POPANI + 0.00006, f"shared-strain threshold {POPANI}", fontsize=8, color="grey")
-    for cls, (col, mk, lab) in _STYLE.items():
+    for cls, (col, mk, lab) in style.items():
         s = d[d.pair_class == cls]
         if len(s):
             ax.scatter(s.bx, s.popANI, s=42, marker=mk, color=col, alpha=0.75,

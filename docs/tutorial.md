@@ -60,6 +60,19 @@ Only points in the top-right box (popANI ≥ 0.999 **and** breadth ≥ 0.5) are 
 > **Scaling caveat.** The all-samples `inStrain compare` can exhaust memory on large cohorts. A
 > chunked/streaming compare is the Item-3 work; for moderate cohorts the standard path is fine.
 
+## Other body-site pairs
+
+The default is gut↔vagina, but the same machinery works for **any two sites** present in your
+metadata `bodysite` column — oral↔gut, mother↔infant, FMT donor↔recipient, skin sites, etc.
+Override per run:
+```bash
+strainshare analyze --compare compare.tsv --meta metadata.tsv --metaphlan community.tsv \
+  --outdir results --site-pair oral,gut
+```
+or set it once in your standard (`site_pair: [oral, gut]`). Class labels and direction calls follow
+the names you give — e.g. `within_oral_gut`, `oral_to_gut`, columns `earliest_oral_tp` /
+`earliest_gut_tp`.
+
 ## Thresholds
 
 Every cutoff lives in one place — [`strainshare/strainshare_standard.yaml`](../strainshare/strainshare_standard.yaml).

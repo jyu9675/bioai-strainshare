@@ -8,15 +8,16 @@ import os
 
 import pandas as pd
 
-from .config import STANDARD
+from .config import STANDARD, site_classes
 
 
 def run(pairs, cfg=None, candidates=None):
     """Return (flags_df, scored_df). scored_df is None if no candidates given."""
     cfg = cfg or STANDARD
     cutoff = cfg["generalist_filter"]["between_shared_rate_max"]
+    _, _, _, between_cls = site_classes(cfg)
 
-    between = pairs[pairs.pair_class == "between_gut_vagina"]
+    between = pairs[pairs.pair_class == between_cls]
     if len(between):
         g = (between.groupby("genome")["shared_strain"]
              .agg(["mean", "sum", "count"])

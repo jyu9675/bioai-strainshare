@@ -1,6 +1,10 @@
-# The strainshare STANDARD (machine-readable mirror of strainshare_config.py::STANDARD).
+# The strainshare STANDARD (machine-readable mirror of strainshare/config.py::STANDARD).
 # Edit here to override defaults; bump spec_version on any change so results stay traceable.
 spec_version: "0.1.0"
+
+# The two body sites compared for cross-site sharing. Any pair present in the metadata
+# `bodysite` column works: [gut, vagina], [oral, gut], [mother, infant], [donor, recipient].
+site_pair: [gut, vagina]
 
 shared_strain:
   popani_primary:   0.999      # lead shared-strain call
