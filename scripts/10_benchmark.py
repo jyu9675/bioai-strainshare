@@ -212,6 +212,76 @@ def summarize_reads(path, cfg, outdir):
     return d
 
 
+def precision_edge(path, cfg, outdir):
+    """Summarize the scaled benchmark (10c): popANI vs near-boundary divergence across
+    species -> the RESOLUTION LIMIT of the 0.999 threshold."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    thr = cfg["shared_strain"]["popani_primary"]
+    bmin = cfg["shared_strain"]["breadth_min"]
+    d = pd.read_csv(path, sep="\t")
+    d["popANI"] = pd.to_numeric(d["popANI"], errors="coerce")
+    d["breadth"] = pd.to_numeric(d["percent_genome_compared"], errors="coerce")
+    d["divergence"] = pd.to_numeric(d["divergence"], errors="coerce")
+    d["evaluable"] = d["breadth"] >= bmin
+    d["called_shared"] = d["evaluable"] & (d["popANI"] >= thr)
+
+    diff = d[(d.truth == "diff") & d.popANI.notna()].copy()
+    same = d[(d.truth == "same") & d.popANI.notna()].copy()
+
+    g = (diff.groupby(["species", "divergence"])
+         .agg(mean_popANI=("popANI", "mean"), sd_popANI=("popANI", "std"), n=("popANI", "size"),
+              frac_called_shared=("called_shared", "mean"))
+         .reset_index())
+    g["frac_flagged_different"] = 1 - g["frac_called_shared"]
+    os.makedirs(outdir, exist_ok=True)
+    g.to_csv(f"{outdir}/precision_edge_summary.tsv", sep="\t", index=False)
+
+    colors = {"L_crispatus": "#2a7d46", "L_iners": "#2a5d9c", "G_vaginalis": "#9c5a2a"}
+    fig, ax = plt.subplots(figsize=(7.8, 5.2))
+    xs = sorted(diff.divergence.unique())
+    xx = [xs[0] * 0.5] + xs + [xs[-1] * 1.15]
+    ax.plot([x * 100 for x in xx], [1 - x for x in xx], color="grey", ls=":", lw=1.2,
+            label="expected: popANI = 1 − divergence")
+    ax.axhline(thr, color="#c0392b", ls="--", lw=1.2)
+    ax.text(xs[0] * 100 * 0.55, thr + 0.00004, f"shared-strain threshold {thr}", color="#c0392b", fontsize=8)
+    for sp in sorted(g.species.unique()):
+        raw = diff[diff.species == sp]
+        gg = g[g.species == sp].sort_values("divergence")
+        col = colors.get(sp, "#555")
+        ax.scatter(raw.divergence * 100, raw.popANI, s=22, alpha=0.45, color=col, zorder=2)
+        ax.plot(gg.divergence * 100, gg.mean_popANI, "-o", color=col, lw=1.8, zorder=3, label=sp)
+    if len(same):
+        ax.scatter([xs[0] * 100 * 0.5] * len(same), same.popANI, marker="*", s=90,
+                   color="black", zorder=4, label="same-strain control (popANI≈1.0)")
+    ax.set_xscale("log")
+    ax.set_xlabel("strain divergence (%)")
+    ax.set_ylabel("popANI (real inStrain)")
+    ax.set_title("Precision edge — popANI vs near-boundary divergence, by species\n"
+                 "where a diverged strain drops below the 0.999 threshold", fontsize=11)
+    ax.legend(fontsize=7.5, loc="lower left")
+    fig.tight_layout()
+    p = f"{outdir}/fig_precision_edge.png"
+    fig.savefig(p, dpi=150)
+
+    print(f"[10 benchmark] precision edge from {path}")
+    print(g.to_string(index=False))
+    # resolution limit: smallest divergence whose mean popANI falls below threshold
+    res = {}
+    for sp in sorted(g.species.unique()):
+        below = g[(g.species == sp) & (g.mean_popANI < thr)].sort_values("divergence")
+        res[sp] = below.divergence.iloc[0] if len(below) else None
+    print("\nResolution limit (smallest divergence flagged as different, mean popANI < %.3f):" % thr)
+    for sp, r in res.items():
+        print(f"  {sp}: {'%.3f%%' % (r * 100) if r is not None else 'not reached in sweep'}")
+    if len(same):
+        print(f"same-strain control popANI: min={same.popANI.min():.5f} (expect ~1.0)")
+    print(f"  wrote {outdir}/precision_edge_summary.tsv and {p}")
+    return g
+
+
 def reads_scaffold():
     print("[10 benchmark] --mode reads is a SCAFFOLD (Unix + reference strains). Intended steps:")
     print("""
@@ -270,6 +340,8 @@ def main():
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--from-reads", default=None, dest="from_reads",
                     help="summarize a reads_pairs.tsv from 10b into the empirical validation figure")
+    ap.add_argument("--precision-edge", default=None, dest="precision_edge",
+                    help="summarize a scaled_reads.tsv from 10c into the precision-edge figure")
     a = ap.parse_args()
     cfg = load_config(a.config if os.path.exists(a.config) else None)
 
@@ -278,6 +350,9 @@ def main():
         return
     if a.from_reads:
         summarize_reads(a.from_reads, cfg, a.outdir)
+        return
+    if a.precision_edge:
+        precision_edge(a.precision_edge, cfg, a.outdir)
         return
     if a.mode == "reads":
         reads_scaffold()

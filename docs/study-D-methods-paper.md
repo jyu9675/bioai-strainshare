@@ -70,6 +70,13 @@ A versioned spec (`strainshare_standard.yaml`, `spec_version` 0.1.0) fixing:
        0.5× and 2× yield no comparison at all, and 5× gives the right popANI but on just 30% of the genome.
        The model's coverage→breadth curve was recalibrated to this. Direct implication: low-biomass vaginal
        metagenomes frequently sit *below* this floor, which is precisely where the StrainGE fallback (M3) earns its place.
+     - *Precision edge* ([`scripts/10c_reads_benchmark_scaled.sh`](../scripts/10c_reads_benchmark_scaled.sh), 3 species ×
+       4 near-boundary divergences × 3 replicates = 39 real comparisons at 20×): maps the **resolution limit of the
+       0.999 threshold**. popANI tracks divergence almost exactly (SD across replicates < 1×10⁻⁴), and — critically —
+       **the same across *L. crispatus*, *L. iners*, and *G. vaginalis*** (species-agnostic). Result:
+       0.05% divergence → popANI ~0.99952 (**called identical**), 0.1% → ~0.99903 (**knife-edge**, flips by species),
+       ≥0.2% → reliably flagged different. **The standard resolves strains diverged ≳0.1–0.2%; below ~0.1% a distinct
+       strain is indistinguishable from identical.** (Fig 6.)
   2. **Public pilot — Goltsman/DiGiulio (PRJNA288562)** — longitudinal pregnancy cohort with paired
      vaginal+gut; reproduce and sharpen the 2018 "related-not-identical" result with modern
      contamination-aware calls and a real null.
@@ -83,6 +90,7 @@ A versioned spec (`strainshare_standard.yaml`, `spec_version` 0.1.0) fixing:
 - **F3** coverage sweep — sensitivity/specificity of shared-strain calls; inStrain vs StrainGE crossover
 - **F4** direction calls on longitudinal events (gut-first vs vagina-first vs unresolved)
 - **F5** generalist filter — between-person shared rate per genome; what it removes and why
+- **F6** precision edge — popANI vs near-boundary divergence across species; resolution limit of the 0.999 threshold (~0.1%)
 - **Table 1** the standard, versioned, side-by-side with inStrain/StrainPhlAn/StrainGE/SameStr/TRACS defaults
 
 ## Validation / claims we can defend
@@ -93,6 +101,9 @@ A versioned spec (`strainshare_standard.yaml`, `spec_version` 0.1.0) fixing:
   as honesty about what strain sharing can and cannot show.
 - A *rigorous negative* (no identical gut↔vaginal strain survives the full filter stack) is itself a
   publishable, defensible result given the confound literature.
+- The 0.999 threshold has a **sharp, species-agnostic resolution limit of ~0.1% divergence** (empirically, SD < 10⁻⁴
+  across replicates in *L. crispatus*, *L. iners*, *G. vaginalis*) — so a "shared strain" call means "diverged by less
+  than ~0.1%," a claim we can state quantitatively rather than by convention.
 
 ## Availability
 

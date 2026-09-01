@@ -24,7 +24,9 @@ scripts/
   07_metaphlan.sh              merged MetaPhlAn species table (feeds 05's Bray–Curtis filter)
   08_direction.py              M4: longitudinal-only transmission direction (gut-first vs vagina-first)
   09_generalist_filter.py      M5: flag strains shared across UNRELATED people (confound control)
-  10_benchmark.py              Study D Fig 3: coverage-sweep sensitivity/specificity + inStrain→StrainGE crossover
+  10_benchmark.py              Study D Fig 3: coverage-sweep + reads validation (--from-reads) + precision edge (--precision-edge)
+  10b_reads_benchmark.sh       real reads validation: same vs 0.3%-diverged strain across coverage (Unix)
+  10c_reads_benchmark_scaled.sh  scaled precision edge: 3 species × near-boundary divergence × reps (Unix, resumable)
   03b_strainge_fallback.sh     M3: low-biomass StrainGE fallback (scaffold, Unix-only)
   strainshare.py               unified config-driven analysis runner (05→09→08→06; cross-platform)
   strainshare_config.py        the STANDARD — single source of truth for every threshold
