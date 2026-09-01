@@ -57,14 +57,19 @@ A versioned spec (`strainshare_standard.yaml`, `spec_version` 0.1.0) fixing:
   (M1 shared-strain + null, M2 contamination, M3 StrainGE fallback, M4 direction, M5 generalist,
   M6 portable Snakemake). All thresholds read from the versioned standard.
 - **Benchmarking datasets:**
-  1. **Synthetic ground truth** — planted shared/not-shared strains, known directions, known
-     contamination, across a coverage sweep (0.1×→30×) to map the sensitivity/specificity cliff and
-     locate the inStrain→StrainGE crossover. **Implemented:** [`scripts/10_benchmark.py`](../scripts/10_benchmark.py)
-     ships two backends — `--mode model` (runs anywhere; the coverage→breadth + finite-position popANI
-     model behind Fig 3, seen in [`../example/benchmark/`](../example/benchmark)) and `--mode reads`
-     (scaffold: simulate reads → real inStrain/StrainGE → same metrics, for the final figure on the cluster).
-     The model already reproduces the expected shape: inStrain no-calls below its ~0.5× breadth floor,
-     StrainGE rescues sensitivity at 0.5–1×, both converge and stay specific ≥6×.
+  1. **Synthetic ground truth + real-read validation** — two layers, both implemented in
+     [`../example/benchmark/`](../example/benchmark):
+     - *Model* ([`scripts/10_benchmark.py --mode model`](../scripts/10_benchmark.py)): coverage→breadth +
+       finite-position popANI, runs anywhere; the illustrative sweep + inStrain→StrainGE crossover (Fig 3, model).
+     - *Real reads* ([`scripts/10b_reads_benchmark.sh`](../scripts/10b_reads_benchmark.sh)): **run**, not a
+       scaffold. Simulates reads from real *L. crispatus* (same strain) and a 0.3%-diverged copy (different
+       strain) at 0.5–30×, through the actual wgsim→bowtie2→inStrain pipeline. **Result (Fig 3, reads):**
+       same-strain popANI = **1.000**, different-strain = **0.9971** (recovering the injected 0.3%),
+       cleanly split by the 0.999 threshold at every evaluable depth. **Key empirical finding:** the
+       breadth-limited *confidence* floor (percent_compared ≥ 0.5) is reached only at **~10×**, not ~1× —
+       0.5× and 2× yield no comparison at all, and 5× gives the right popANI but on just 30% of the genome.
+       The model's coverage→breadth curve was recalibrated to this. Direct implication: low-biomass vaginal
+       metagenomes frequently sit *below* this floor, which is precisely where the StrainGE fallback (M3) earns its place.
   2. **Public pilot — Goltsman/DiGiulio (PRJNA288562)** — longitudinal pregnancy cohort with paired
      vaginal+gut; reproduce and sharpen the 2018 "related-not-identical" result with modern
      contamination-aware calls and a real null.

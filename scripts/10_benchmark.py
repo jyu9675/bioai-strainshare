@@ -54,9 +54,15 @@ SG_EFFICIENCY = 0.5             # StrainGE effective-positions penalty (assembly
 
 
 def breadth(coverage, rng, n):
-    """Expected genome breadth at a coverage, with mild per-sample noise. Anchored to
-    inStrain: ~50% at 1x, ~98% at 6x."""
-    b = 1.0 - np.exp(-LN2 * coverage)
+    """Expected COMPARISON breadth (percent_compared: positions comparable in BOTH samples)
+    at a coverage, with mild per-sample noise.
+
+    Calibrated to the empirical reads-mode run (10b) on real L. crispatus:
+    percent_compared ~0.30 @ 5x, ~0.92 @ 10x, ~1.0 @ 30x, and NO comparison below ~5x.
+    So the 0.5 confidence floor is reached around ~6-7x -- NOT ~1x. (This is stricter than
+    inStrain's coverage-breadth, because a position must clear min depth in *both* samples.)"""
+    c = max(float(coverage), 1e-6)
+    b = 1.0 / (1.0 + np.exp(-3.0 * (np.log(c) - np.log(6.0))))   # logistic in log-coverage, c50=6x
     b = b + rng.normal(0, 0.03, n)
     return np.clip(b, 0.0, 1.0)
 
@@ -129,16 +135,81 @@ def plot(df, outdir, breadth_min, sg_cov_min):
     ax.set_xlabel("coverage (x, log scale)")
     ax.set_ylabel("sensitivity / specificity")
     ax.set_ylim(-0.03, 1.03)
-    ax.axvline(1.0, color="grey", ls="--", lw=1)
-    ax.text(1.02, 0.02, "inStrain breadth floor (~1x -> 50%)", fontsize=7, color="grey", rotation=90, va="bottom")
+    ax.axvline(6.0, color="grey", ls="--", lw=1)
+    ax.text(6.2, 0.02, "inStrain confidence floor (~6-7x, breadth->0.5)", fontsize=7,
+            color="grey", rotation=90, va="bottom")
     ax.axvline(sg_cov_min, color="#c0563b", ls="--", lw=1, alpha=0.6)
-    ax.set_title("Fig 3 — shared-strain calls vs coverage (model)\n"
-                 "StrainGE rescues sensitivity below the inStrain breadth floor", fontsize=11)
+    ax.set_title("Fig 3 — shared-strain calls vs coverage (model, calibrated to reads-mode)\n"
+                 "StrainGE rescues sensitivity below the inStrain confidence floor", fontsize=11)
     ax.legend(fontsize=8, loc="lower right")
     fig.tight_layout()
     path = f"{outdir}/fig3_coverage_sweep.png"
     fig.savefig(path, dpi=150)
     return path
+
+
+def summarize_reads(path, cfg, outdir):
+    """Ingest reads_pairs.tsv from 10b_reads_benchmark.sh (REAL inStrain popANI per pair)
+    and produce the empirical validation figure + verdict, using the same thresholds."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    popani_thr = cfg["shared_strain"]["popani_primary"]
+    breadth_min = cfg["shared_strain"]["breadth_min"]
+
+    d = pd.read_csv(path, sep="\t")
+    d["popANI"] = pd.to_numeric(d["popANI"], errors="coerce")
+    d["percent_genome_compared"] = pd.to_numeric(d["percent_genome_compared"], errors="coerce")
+    d["evaluable"] = d["percent_genome_compared"] >= breadth_min
+    d["called_shared"] = d["evaluable"] & (d["popANI"] >= popani_thr)
+    # correctness of the call vs known truth
+    d["correct"] = ((d.truth == "same") & d.called_shared) | ((d.truth == "diff") & ~d.called_shared)
+
+    os.makedirs(outdir, exist_ok=True)
+    d.to_csv(f"{outdir}/reads_summary.tsv", sep="\t", index=False)
+
+    has = d[d.popANI.notna()]
+    y_lo = min(0.9965, has.popANI.min() - 0.0005) if len(has) else 0.996
+
+    fig, ax = plt.subplots(figsize=(7.5, 5))
+    # no-confident-call band (breadth below floor)
+    ax.axhline(popani_thr, color="grey", ls="--", lw=1)
+    ax.text(d.coverage.min(), popani_thr + 0.00004, f"shared-strain threshold  {popani_thr}",
+            fontsize=8, color="grey")
+    for truth, col, lab in [("same", "#2a7d46", "same strain (truth: shared)"),
+                            ("diff", "#c0563b", "different strain (truth: not shared)")]:
+        s = d[d.truth == truth]
+        conf = s[s.evaluable & s.popANI.notna()]                       # breadth >= floor
+        subbr = s[~s.evaluable & s.popANI.notna()]                     # call made but breadth < floor
+        nocall = s[s.popANI.isna()]                                    # no comparison produced
+        ax.scatter(conf.coverage, conf.popANI, s=90, color=col, zorder=3,
+                   edgecolor="white", label=f"{lab} — confident")
+        ax.scatter(subbr.coverage, subbr.popANI, s=90, facecolors="none", edgecolors=col,
+                   linewidths=1.6, zorder=3, label=f"{lab} — sub-breadth")
+        if len(nocall):
+            ax.scatter(nocall.coverage, [y_lo + 0.0002] * len(nocall), s=80, color=col,
+                       marker="x", zorder=3, label=f"{lab} — no-call")
+        for _, r in s.iterrows():
+            if pd.notna(r.popANI):
+                ax.annotate(f"br={r.percent_genome_compared:.2f}", (r.coverage, r.popANI),
+                            fontsize=6.5, color=col, xytext=(5, -3), textcoords="offset points")
+    ax.set_xscale("log")
+    ax.set_xlabel("coverage (x, log scale)")
+    ax.set_ylabel("popANI (real inStrain)")
+    ax.set_ylim(y_lo, 1.0006)
+    ax.set_title("Fig 3 (reads) — empirical validation on real L. crispatus\n"
+                 "same strain (popANI=1.0) vs 0.3%-diverged strain (~0.997), across coverage", fontsize=11)
+    ax.legend(fontsize=7, loc="center right")
+    fig.tight_layout()
+    p = f"{outdir}/fig3_reads_validation.png"
+    fig.savefig(p, dpi=150)
+
+    print(f"[10 benchmark] reads validation from {path}")
+    print(d[["coverage", "truth", "popANI", "percent_genome_compared", "called_shared", "correct"]]
+          .to_string(index=False))
+    print(f"  wrote {outdir}/reads_summary.tsv and {p}")
+    return d
 
 
 def reads_scaffold():
@@ -197,11 +268,16 @@ def main():
                                                       "strainshare_standard.yaml"))
     ap.add_argument("--outdir", default="results/benchmark")
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--from-reads", default=None, dest="from_reads",
+                    help="summarize a reads_pairs.tsv from 10b into the empirical validation figure")
     a = ap.parse_args()
     cfg = load_config(a.config if os.path.exists(a.config) else None)
 
     if a.selftest:
         selftest(cfg)
+        return
+    if a.from_reads:
+        summarize_reads(a.from_reads, cfg, a.outdir)
         return
     if a.mode == "reads":
         reads_scaffold()
