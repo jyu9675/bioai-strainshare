@@ -1,5 +1,9 @@
 # Study D — Methods paper outline
 
+> **A full prose draft now exists: [`manuscript-draft.md`](manuscript-draft.md)** (abstract → results →
+> discussion → methods → limitations, every number reproducible from `example/`). This outline remains the
+> figure/dataset plan behind it.
+
 **Working title:** *strainshare: a standardized, contamination-aware framework for detecting
 and directionally resolving gut↔cervicovaginal bacterial strain sharing*
 
