@@ -22,9 +22,16 @@ scripts/
   05_shared_strain_analysis.py Steps 3–4: within-vs-between null + contamination verdict
   06_plots.py                  Figs 1–3 (within/between, translocation plane, directionality)
   07_metaphlan.sh              merged MetaPhlAn species table (feeds 05's Bray–Curtis filter)
+  08_direction.py              M4: longitudinal-only transmission direction (gut-first vs vagina-first)
+  09_generalist_filter.py      M5: flag strains shared across UNRELATED people (confound control)
+  03b_strainge_fallback.sh     M3: low-biomass StrainGE fallback (scaffold, Unix-only)
+  strainshare.py               unified config-driven analysis runner (05→09→08→06; cross-platform)
+  strainshare_config.py        the STANDARD — single source of truth for every threshold
+  strainshare_standard.yaml    machine-readable mirror of the standard (edit to override)
   check_env.sh                 verify tool stack is installed before running
-  smoke_test.py                synthetic end-to-end test of 05+06 (runs on Windows, no real data)
+  smoke_test.py                synthetic end-to-end test of 05+08+09 (runs on Windows, no real data)
   dev/                         scratch/debug helpers (kept for provenance, not part of the pipeline)
+workflow/Snakefile             M6: portable Snakemake DAG (scaffold)
 environment.yml  conda env (bioai) for the Unix stack — steps 02–04, 07
 refs/    reference genomes / dRep DB / bowtie2 index (vagref.*)
 data/    downloaded fastqs + run/sample metadata

@@ -1,0 +1,3 @@
+subject	genome	direction	earliest_gut_tp	earliest_vagina_tp	n_timepoints	note
+S2	Lactobacillus_crispatus	direction_unresolved			1	insufficient timepoints (needs longitudinal)
+S1	Lactobacillus_crispatus	gut_to_vagina	12.0	30.0	2	gut precedes vagina

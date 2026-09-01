@@ -1,0 +1,4 @@
+genome	s1	s2	subject1	subject2	site1	site2	pair_class	popANI	breadth	shared_strain	bray_curtis	verdict	is_generalist	confidence
+Gardnerella_vaginalis	S3_vagina_30	S3_gut_30	S3	S3	vagina	gut	within_gut_vagina	0.99996	0.8	True	0.1011758561438537	contamination_suspect	False	medium
+Lactobacillus_crispatus	S1_vagina_30	S1_gut_30	S1	S1	vagina	gut	within_gut_vagina	0.99995	0.8	True	0.9780559020272532	translocation_candidate	False	high
+Lactobacillus_crispatus	S2_vagina_30	S2_gut_30	S2	S2	vagina	gut	within_gut_vagina	0.99995	0.8	True	0.9860601041842186	translocation_candidate	False	high

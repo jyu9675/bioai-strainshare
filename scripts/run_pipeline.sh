@@ -24,7 +24,15 @@ echo "### 05 shared-strain analysis"
 python scripts/05_shared_strain_analysis.py \
   --compare "$RES"/compare.IS/output/*_genomeWide_compare.tsv \
   --meta "$META" --metaphlan "$RES/metaphlan/merged_metaphlan.tsv" --outdir "$RES"
+echo "### 09 generalist filter (M5)"
+python scripts/09_generalist_filter.py --pairs "$RES/pairs_tagged.tsv" \
+  --candidates "$RES/translocation_candidates.tsv" \
+  --config scripts/strainshare_standard.yaml --outdir "$RES"
+echo "### 08 direction inference (M4)"
+python scripts/08_direction.py --candidates "$RES/translocation_candidates.tsv" \
+  --pairs "$RES/pairs_tagged.tsv" --meta "$META" \
+  --config scripts/strainshare_standard.yaml --outdir "$RES"
 echo "### 06 figures"
 python scripts/06_plots.py --pairs "$RES/pairs_tagged.tsv" \
   --candidates "$RES/translocation_candidates.tsv" --meta "$META" --outdir "$RES/figures"
-echo "### PIPELINE DONE -> $RES  (tables + figures/)"
+echo "### PIPELINE DONE -> $RES  (tables + figures/ + direction_calls + generalist flags)"

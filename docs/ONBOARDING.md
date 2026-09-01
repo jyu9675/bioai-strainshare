@@ -48,7 +48,25 @@ A metadata table with exactly these columns:
 - `pairs_tagged.tsv` — every genome × sample-pair, classified + shared-strain flag + Bray–Curtis
 - `species_within_between.tsv` — per-species within- vs between-person shared-strain rate
 - `translocation_candidates.tsv` — within-person shared strains with a translocation/contamination verdict
+- `translocation_candidates_scored.tsv` — the above + generalist flag + confidence (M5)
+- `genome_generalist_flags.tsv` — per-genome between-person shared rate; generalists are down-ranked (M5)
+- `direction_calls.tsv` — per shared strain: `gut_to_vagina` / `vagina_to_gut` / `direction_unresolved` (M4)
 - **Fig 1** within-vs-between-person popANI · **Fig 2** translocation-vs-contamination plane · **Fig 3** directionality timeline
+
+### One-command analysis (cross-platform)
+
+Once you have the cluster outputs (compare table + metadata + MetaPhlAn table), run everything at once:
+
+```bash
+python scripts/strainshare.py \
+  --compare  results/compare.IS/output/genomeWide_compare.tsv \
+  --meta     data/metadata.tsv \
+  --metaphlan results/metaphlan/merged_metaphlan.tsv \
+  --outdir   results
+```
+
+Thresholds come from `scripts/strainshare_standard.yaml` (the shared standard) — don't hand-edit
+cutoffs in the scripts; change them there so results stay comparable across everyone's runs.
 
 ## Key thresholds (locked, so results are comparable across runs)
 

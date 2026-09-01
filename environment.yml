@@ -23,10 +23,13 @@ dependencies:
   #   pip install --upgrade instrain   # -> instrain 1.10.0 + biopython 1.74
   - instrain
   - metaphlan>=4
+  - strainge         # M3 low-biomass fallback (detects strain sharing down to ~0.5x)
   # analysis / plotting
   - pandas
   - numpy
   - matplotlib
+  - pyyaml           # reads scripts/strainshare_standard.yaml (the threshold standard)
+  - snakemake-minimal  # M6 portable workflow (workflow/Snakefile)
   # download utils
   - wget
   - curl

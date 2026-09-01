@@ -1,3 +1,4 @@
 genome	within_shared_rate	within_n_shared	within_n_pairs	between_shared_rate	between_n_shared	between_n_pairs	within_minus_between
-Gardnerella_vaginalis	1.0	1	1	0.0	0.0	0.0	1.0
-Lactobacillus_crispatus	1.0	2	2	0.0	0.0	1.0	1.0
+Gardnerella_vaginalis	1.0	1.0	1.0	0.0	0.0	0.0	1.0
+Lactobacillus_crispatus	1.0	2.0	2.0	0.0	0.0	1.0	1.0
+Escherichia_coli	0.0	0.0	0.0	1.0	1.0	1.0	-1.0

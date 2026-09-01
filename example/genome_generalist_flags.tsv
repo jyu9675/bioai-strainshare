@@ -1,0 +1,3 @@
+genome	between_shared_rate	n_between_shared	n_between_pairs	is_generalist
+Escherichia_coli	1.0	1	1	True
+Lactobacillus_crispatus	0.0	0	1	False

@@ -70,12 +70,17 @@ C = []
 for subj in ["S1", "S2"]:
     C.append(row("Lactobacillus_crispatus", f"{subj}_vagina_30", f"{subj}_gut_30", 0.99995))
 C.append(row("Lactobacillus_crispatus", "S1_vagina_30", "S2_gut_30", 0.9970))   # between: not shared
+# S1 L. crispatus also present in gut at BOTH timepoints (gut wk12 + wk30) but vagina only at wk30
+# -> M4 should call direction gut_to_vagina for S1. S2 has only wk30 -> direction_unresolved.
+C.append(row("Lactobacillus_crispatus", "S1_gut_12", "S1_gut_30", 0.99999))
 # G. vaginalis: identical within-person gut↔vagina for S3, but S3 gut community ~ vagina (contamination)
 C.append(row("Gardnerella_vaginalis", "S3_vagina_30", "S3_gut_30", 0.99996))
 # L. iners: shared within same site over time (positive control)
 C.append(row("Lactobacillus_iners", "S1_vagina_12", "S1_vagina_30", 0.99999))
 # Prevotella bivia: between-person, low popANI (clear negative)
 C.append(row("Prevotella_bivia", "S1_gut_30", "S2_gut_30", 0.9950))
+# E. coli: "shared" between UNRELATED people (S1 gut ↔ S2 vagina) -> M5 should flag it generalist.
+C.append(row("Escherichia_coli", "S1_gut_30", "S2_vagina_30", 0.99999))
 pd.DataFrame(C).to_csv(f"{OUT}/genomeWide_compare.tsv", sep="\t", index=False)
 
 print(f"[smoke] wrote synthetic inputs to {OUT}")
@@ -90,13 +95,41 @@ run([py, f"{HERE}/05_shared_strain_analysis.py",
      "--meta", f"{OUT}/metadata.tsv",
      "--metaphlan", f"{OUT}/merged_metaphlan.tsv",
      "--outdir", OUT])
+run([py, f"{HERE}/09_generalist_filter.py",
+     "--pairs", f"{OUT}/pairs_tagged.tsv",
+     "--candidates", f"{OUT}/translocation_candidates.tsv",
+     "--outdir", OUT])
+run([py, f"{HERE}/08_direction.py",
+     "--candidates", f"{OUT}/translocation_candidates.tsv",
+     "--pairs", f"{OUT}/pairs_tagged.tsv",
+     "--meta", f"{OUT}/metadata.tsv",
+     "--outdir", OUT])
 run([py, f"{HERE}/06_plots.py",
      "--pairs", f"{OUT}/pairs_tagged.tsv",
      "--candidates", f"{OUT}/translocation_candidates.tsv",
      "--meta", f"{OUT}/metadata.tsv",
      "--outdir", f"{OUT}/figures"])
 
-print("\n[smoke] EXPECTED:")
-print("  translocation_candidates.tsv -> L. crispatus (S1,S2) = translocation_candidate,")
-print("                                  G. vaginalis (S3)    = contamination_suspect")
+# --- assert the planted truths (fail loudly if a module regressed) ---
+def _load(name):
+    return pd.read_csv(f"{OUT}/{name}", sep="\t")
+
+cand = _load("translocation_candidates.tsv").set_index("genome")
+assert cand.loc["Lactobacillus_crispatus", "verdict"].eq("translocation_candidate").all(), \
+    "L. crispatus should be translocation_candidate"
+assert "contamination_suspect" in cand.loc["Gardnerella_vaginalis", "verdict"], \
+    "G. vaginalis should be contamination_suspect"
+
+gen = _load("genome_generalist_flags.tsv").set_index("genome")
+assert bool(gen.loc["Escherichia_coli", "is_generalist"]) is True, "E. coli should be flagged generalist"
+assert bool(gen.loc["Lactobacillus_crispatus", "is_generalist"]) is False, "L. crispatus should NOT be generalist"
+
+dr = _load("direction_calls.tsv").set_index("subject")
+assert dr.loc["S1", "direction"] == "gut_to_vagina", "S1 L. crispatus should be gut_to_vagina"
+assert dr.loc["S2", "direction"] == "direction_unresolved", "S2 (single timepoint) should be unresolved"
+
+print("\n[smoke] ALL ASSERTIONS PASSED:")
+print("  05  L. crispatus = translocation_candidate ; G. vaginalis = contamination_suspect")
+print("  09  E. coli = generalist (between-person share) ; L. crispatus = not generalist")
+print("  08  S1 = gut_to_vagina ; S2 = direction_unresolved (single timepoint)")
 print(f"  figures in {OUT}/figures/fig1..3.png")

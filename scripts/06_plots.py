@@ -10,15 +10,18 @@ Usage:
   python 06_plots.py --pairs ../results/pairs_tagged.tsv --meta ../data/metadata.tsv \
                      --candidates ../results/translocation_candidates.tsv --outdir ../results/figures
 """
-import argparse, os
+import argparse, os, sys
 import pandas as pd
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-POPANI_THRESH = 0.999
-BC_SIMILAR = 0.5
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from strainshare_config import STANDARD
+
+POPANI_THRESH = STANDARD["shared_strain"]["popani_primary"]
+BC_SIMILAR = STANDARD["contamination"]["bray_curtis_similar_max"]
 
 
 def fig1(pairs, outdir):

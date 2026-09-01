@@ -19,13 +19,19 @@ pairs_tagged.tsv           every genome x sample-pair with class + shared-strain
 species_within_between.tsv per-species within vs between shared-strain rate (Fig 1 / Table)
 translocation_candidates.tsv within-person gut-vaginal shared strains + contamination verdict (Fig 2)
 """
-import argparse, sys
+import argparse, os, sys
 import pandas as pd
 import numpy as np
 
-POPANI_THRESH = 0.999        # deck standard (99.9%). inStrain canonical = 0.99999 -- see plan.
-BREADTH_THRESH = 0.5         # percent_genome_compared
-BC_SIMILAR = 0.5             # Bray-Curtis DISTANCE below this => "similar community" => contamination-like
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from strainshare_config import STANDARD
+
+# Thresholds are sourced from the strainshare STANDARD (single source of truth) so every
+# run is comparable. Values are unchanged from the pilot deck; edit strainshare_config.py
+# / strainshare_standard.yaml to change them, and bump the spec version.
+POPANI_THRESH = STANDARD["shared_strain"]["popani_primary"]     # 0.999 (canonical 0.99999 reported too)
+BREADTH_THRESH = STANDARD["shared_strain"]["breadth_min"]       # percent_genome_compared
+BC_SIMILAR = STANDARD["contamination"]["bray_curtis_similar_max"]  # BC distance below this => contamination-like
 
 
 def bray_curtis(a, b):
