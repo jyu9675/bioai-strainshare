@@ -59,7 +59,12 @@ A versioned spec (`strainshare_standard.yaml`, `spec_version` 0.1.0) fixing:
 - **Benchmarking datasets:**
   1. **Synthetic ground truth** — planted shared/not-shared strains, known directions, known
      contamination, across a coverage sweep (0.1×→30×) to map the sensitivity/specificity cliff and
-     locate the inStrain→StrainGE crossover. (The repo's `smoke_test.py` is the seed of this.)
+     locate the inStrain→StrainGE crossover. **Implemented:** [`scripts/10_benchmark.py`](../scripts/10_benchmark.py)
+     ships two backends — `--mode model` (runs anywhere; the coverage→breadth + finite-position popANI
+     model behind Fig 3, seen in [`../example/benchmark/`](../example/benchmark)) and `--mode reads`
+     (scaffold: simulate reads → real inStrain/StrainGE → same metrics, for the final figure on the cluster).
+     The model already reproduces the expected shape: inStrain no-calls below its ~0.5× breadth floor,
+     StrainGE rescues sensitivity at 0.5–1×, both converge and stay specific ≥6×.
   2. **Public pilot — Goltsman/DiGiulio (PRJNA288562)** — longitudinal pregnancy cohort with paired
      vaginal+gut; reproduce and sharpen the 2018 "related-not-identical" result with modern
      contamination-aware calls and a real null.

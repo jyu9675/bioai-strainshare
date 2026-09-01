@@ -109,6 +109,8 @@ run([py, f"{HERE}/06_plots.py",
      "--candidates", f"{OUT}/translocation_candidates.tsv",
      "--meta", f"{OUT}/metadata.tsv",
      "--outdir", f"{OUT}/figures"])
+# coverage-sweep benchmark self-test (Study D Fig 3 model)
+run([py, f"{HERE}/10_benchmark.py", "--selftest"])
 
 # --- assert the planted truths (fail loudly if a module regressed) ---
 def _load(name):
@@ -132,4 +134,5 @@ print("\n[smoke] ALL ASSERTIONS PASSED:")
 print("  05  L. crispatus = translocation_candidate ; G. vaginalis = contamination_suspect")
 print("  09  E. coli = generalist (between-person share) ; L. crispatus = not generalist")
 print("  08  S1 = gut_to_vagina ; S2 = direction_unresolved (single timepoint)")
+print("  10  coverage-sweep selftest passed (StrainGE rescues sensitivity < 1x)")
 print(f"  figures in {OUT}/figures/fig1..3.png")
