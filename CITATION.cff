@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this pipeline, please cite it as below."
+title: "BIOAI: a contamination-aware gut-vaginal strain-sharing pipeline"
+abstract: >-
+  A reproducible, contamination-aware pipeline that detects whether two body
+  sites in the same individual share an identical bacterial strain (inStrain
+  popANI), separates true translocation from cross-swab contamination via a
+  community-similarity check, and grounds calls with a within- vs
+  between-person null.
+type: software
+authors:
+  - given-names: Jean
+    family-names: Yu
+    email: jyu9675@gmail.com
+keywords:
+  - metagenomics
+  - strain-sharing
+  - microbiome
+  - inStrain
+  - cervicovaginal
+  - gut microbiome
+license: MIT
+date-released: 2026-08-31

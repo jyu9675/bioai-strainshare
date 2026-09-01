@@ -1,0 +1,477 @@
+<title>Cross-Site Strain Tool — Design & Research Plan</title>
+<style>
+  :root {
+    --paper:   #F7F6F1;
+    --card:    #FFFFFF;
+    --ink:     #191C22;
+    --muted:   #565C68;
+    --faint:   #8A8F9A;
+    --line:    #E3E0D8;
+    --line-2:  #EEEBE3;
+    --gut:     #A2662B;   /* ochre — the gut site */
+    --gut-bg:  #F6EEE1;
+    --fgt:     #883A5B;   /* plum — the female genital tract, the lab's core */
+    --fgt-bg:  #F4E7ED;
+    --good:    #2F7A57;
+    --good-bg: #E7F1EA;
+    --warn:    #9A6B12;
+    --warn-bg: #F6EEDC;
+    --bad:     #A63A3A;
+    --bad-bg:  #F4E4E1;
+    --serif:   "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans:    system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono:    ui-monospace, "SFMono-Regular", "Cascadia Code", "Consolas", monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px 120px; }
+  .measure { max-width: 700px; }
+
+  /* ---- type ---- */
+  h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; text-wrap: balance; line-height: 1.18; }
+  p { margin: 0 0 1em; }
+  a { color: var(--fgt); text-underline-offset: 2px; }
+
+  .eyebrow {
+    font-family: var(--sans);
+    font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  /* ---- masthead ---- */
+  .masthead { padding: 72px 0 40px; border-bottom: 1px solid var(--line); }
+  .masthead h1 { font-size: clamp(34px, 5vw, 52px); margin: 14px 0 18px; letter-spacing: -.01em; }
+  .lede { font-size: 20px; line-height: 1.5; color: var(--muted); max-width: 660px; }
+  .lede b { color: var(--ink); font-weight: 600; }
+  .meta-row {
+    display: flex; flex-wrap: wrap; gap: 8px 28px; margin-top: 30px;
+    font-size: 13px; color: var(--muted); font-family: var(--mono);
+  }
+  .meta-row span b { color: var(--ink); font-weight: 600; }
+
+  /* ---- site tags (the semantic pair) ---- */
+  .site { font-weight: 600; padding: 1px 7px; border-radius: 3px; font-size: .92em; white-space: nowrap; }
+  .site.gut { color: var(--gut); background: var(--gut-bg); }
+  .site.fgt { color: var(--fgt); background: var(--fgt-bg); }
+
+  /* ---- section scaffolding ---- */
+  section { padding-top: 64px; }
+  .sec-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 8px; }
+  .sec-num {
+    font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--fgt);
+    border: 1px solid var(--line); border-radius: 4px; padding: 3px 8px; flex: none;
+  }
+  section > h2 { font-size: 28px; margin: 0 0 6px; }
+  .sec-sub { color: var(--muted); font-size: 16px; margin: 0 0 28px; max-width: 680px; }
+
+  /* ---- thesis box ---- */
+  .thesis {
+    background: var(--card); border: 1px solid var(--line);
+    border-left: 3px solid var(--fgt);
+    border-radius: 6px; padding: 26px 30px; margin: 36px 0 8px;
+  }
+  .thesis p:last-child { margin-bottom: 0; }
+
+  /* ---- evidence-graded claim cards ---- */
+  .claims { display: grid; gap: 14px; }
+  .claim {
+    background: var(--card); border: 1px solid var(--line); border-radius: 6px;
+    padding: 18px 20px 16px; display: grid; gap: 8px;
+  }
+  .claim-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .grade {
+    font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 999px; white-space: nowrap;
+  }
+  .g-est  { color: var(--good); background: var(--good-bg); }
+  .g-emg  { color: var(--fgt);  background: var(--fgt-bg); }
+  .g-con  { color: var(--warn); background: var(--warn-bg); }
+  .g-ref  { color: var(--bad);  background: var(--bad-bg); }
+  .claim h4 { font-family: var(--sans); font-size: 15.5px; font-weight: 650; margin: 0; line-height: 1.35; }
+  .claim p { margin: 0; font-size: 14.5px; color: var(--muted); }
+  .claim .src { font-family: var(--mono); font-size: 12px; color: var(--faint); }
+  .claim .src a { color: var(--faint); }
+  .claim.refuted h4 { text-decoration: line-through; text-decoration-color: var(--bad); text-decoration-thickness: 1px; }
+
+  /* ---- pipeline diagram ---- */
+  .pipe {
+    background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+    padding: 28px; margin: 8px 0 28px; overflow-x: auto;
+  }
+  .pipe-flow { display: flex; align-items: stretch; gap: 0; min-width: 640px; }
+  .node {
+    flex: 1; border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 5px; background: var(--paper);
+  }
+  .node .n-lab { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+  .node .n-title { font-family: var(--serif); font-weight: 600; font-size: 16px; }
+  .node .n-body { font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+  .node.src-gut { border-top: 3px solid var(--gut); }
+  .node.src-fgt { border-top: 3px solid var(--fgt); }
+  .node.core    { border-top: 3px solid var(--ink); }
+  .arrow { flex: none; align-self: center; padding: 0 12px; color: var(--faint); font-size: 22px; }
+  .new-badge { font-family: var(--mono); font-size: 10.5px; color: var(--good); background: var(--good-bg); padding: 1px 6px; border-radius: 3px; align-self: flex-start; }
+
+  /* ---- module list ---- */
+  .modules { display: grid; gap: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--card); }
+  .mod { display: grid; grid-template-columns: 42px 1fr; gap: 16px; padding: 18px 22px; border-bottom: 1px solid var(--line-2); }
+  .mod:last-child { border-bottom: 0; }
+  .mod .m-id { font-family: var(--mono); font-size: 13px; color: var(--fgt); font-weight: 600; padding-top: 2px; }
+  .mod h4 { font-family: var(--sans); font-size: 15.5px; margin: 0 0 4px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .mod p { margin: 0; font-size: 14px; color: var(--muted); }
+  .pill { font-size: 10.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; }
+  .pill.have { color: var(--good); background: var(--good-bg); }
+  .pill.build { color: var(--gut); background: var(--gut-bg); }
+
+  code, .k { font-family: var(--mono); font-size: .88em; background: var(--line-2); padding: 1px 5px; border-radius: 3px; color: var(--ink); }
+
+  /* ---- study design cards ---- */
+  .studies { display: grid; gap: 18px; }
+  .study { background: var(--card); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .study-head { padding: 18px 22px 16px; border-bottom: 1px solid var(--line-2); }
+  .study-head .s-tag { font-family: var(--mono); font-size: 12px; color: var(--fgt); font-weight: 600; }
+  .study-head h3 { font-size: 20px; margin: 6px 0 0; }
+  .study-body { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0; }
+  .sb-cell { padding: 15px 22px; border-right: 1px solid var(--line-2); border-top: 1px solid var(--line-2); }
+  .sb-cell:last-child { border-right: 0; }
+  .sb-cell .sb-lab { font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--faint); margin-bottom: 6px; }
+  .sb-cell p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+  .sb-cell.detects { background: var(--fgt-bg); }
+  .sb-cell.detects .sb-lab { color: var(--fgt); }
+  .sb-cell.detects p { color: var(--ink); }
+
+  /* ---- risk table ---- */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+  table { border-collapse: collapse; width: 100%; min-width: 620px; background: var(--card); }
+  th, td { text-align: left; padding: 13px 18px; font-size: 14px; border-bottom: 1px solid var(--line-2); vertical-align: top; }
+  th { font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); background: var(--paper); }
+  tr:last-child td { border-bottom: 0; }
+  td b { font-weight: 600; }
+  td .fix { color: var(--good); font-weight: 600; }
+
+  ul.tight { margin: 0 0 1em; padding-left: 1.2em; }
+  ul.tight li { margin-bottom: .4em; color: var(--muted); }
+  ul.tight li b { color: var(--ink); font-weight: 600; }
+
+  .foot { margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--line); font-size: 13px; color: var(--faint); }
+  .foot a { color: var(--muted); }
+  .foot .src-list { display: grid; gap: 4px; font-family: var(--mono); font-size: 12px; margin-top: 12px; }
+
+  .callout { font-size: 13.5px; color: var(--muted); background: var(--warn-bg); border-radius: 6px; padding: 12px 16px; border-left: 3px solid var(--warn); }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">Design Note · Tool + Complementary Research</div>
+    <h1>A standardized tool for gut&#8202;&#8596;&#8202;vaginal bacterial strain transmission</h1>
+    <p class="lede">Two deliverables from one codebase: <b>(1)</b> a portable transmission tracker that turns paired
+      <span class="site gut">gut</span> and <span class="site fgt">vaginal</span> metagenomes into shared-strain and
+      direction calls, and <b>(2)</b> a <b>&ldquo;VALENCIA-for-strains&rdquo;</b> standard — fixed thresholds and a
+      built-in null so calls are comparable across studies. Both grow directly out of your existing BIOAI pilot.</p>
+    <div class="meta-row">
+      <span><b>For:</b> Kwon Lab collaboration angle</span>
+      <span><b>Basis:</b> BIOAI strain pilot + 22 verified findings</span>
+      <span><b>Date:</b> 2026-08-31</span>
+    </div>
+  </header>
+
+  <div class="thesis">
+    <p style="margin-bottom:.6em"><b>The one-paragraph thesis.</b> The field has independently produced the two ingredients
+    this tool needs but never joined them. On the <span class="site fgt">clinical</span> side, vaginal transplantation and
+    live biotherapeutics <i>already</i> require strain-resolved tracking to work — donor <i>L.&nbsp;crispatus</i> strains are
+    followed into recipients, and a woman&rsquo;s own endogenous strains form a competing reservoir that resists displacement.
+    On the <span style="color:var(--muted)">methods</span> side, strain-sharing thresholds are mature but <i>unstandardized</i>,
+    and no existing tool infers transmission <i>direction</i> or survives the low biomass of vaginal samples. Nobody has asked
+    whether the <span class="site gut">gut</span> is the reservoir seeding the <span class="site fgt">vagina</span>. That
+    question is the whitespace — and it maps cleanly onto cohorts the Kwon Lab already holds.</p>
+  </div>
+
+  <!-- ================= PART I ================= -->
+  <section>
+    <div class="sec-head"><span class="sec-num">I</span><h2>What the evidence actually says</h2></div>
+    <p class="sec-sub">Graded from a fan-out literature pass (21 sources → 98 claims → 25 adversarially verified, 22 confirmed).
+      The grade tells you how hard you can lean on each fact when writing a grant or a paper.</p>
+
+    <div class="claims">
+      <div class="claim">
+        <div class="claim-top"><span class="grade g-est">Established</span></div>
+        <h4>Vaginal transplant &amp; live-biotherapeutic engraftment is already tracked at strain level</h4>
+        <p>VMT pilot (NCT04046900): 3/4 recipients shifted to <i>L.&nbsp;crispatus</i> dominance at 1&nbsp;month (durable
+          &ge;6&nbsp;mo in 2), 0/placebo — with donor-derived strains directly traced in. LACTIN-V/CTV-05 used StrainFacts to
+          separate the administered strain from endogenous ones (30% vs 9% dominance at wk12; benefit ratio 3.4, CI&nbsp;1.4–8.1).
+          Species-level readouts are provably insufficient.</p>
+        <p class="src">medRxiv 2025.08.27.25334544 · Cell Host &amp; Microbe S1931-3128(26)00090-9</p>
+      </div>
+
+      <div class="claim">
+        <div class="claim-top"><span class="grade g-est">Established</span></div>
+        <h4>An endogenous strain reservoir governs whether therapy takes</h4>
+        <p>Among 18 visits with high native-strain abundance, 61% retained it and <i>none</i> flipped to the administered CTV-05;
+          native strains displaced the drug but were almost never displaced by it. Colonization success was predictable from
+          pre-treatment state (bacterial load, diversity, pH, baseline IL-1β).</p>
+        <p class="src">Cell Host &amp; Microbe S1931-3128(26)00090-9</p>
+      </div>
+
+      <div class="claim">
+        <div class="claim-top"><span class="grade g-est">Established</span></div>
+        <h4>Shared strains ≠ transmission, and never imply direction</h4>
+        <p>Shared environment and diet inflate sharing independent of any transmission; the same signal reflects persistence just
+          as well as transfer. The stringent thresholds that exclude ~95% of false sharing also discard ~91% of <i>true</i>
+          events. TRACS (2026) states outright it &ldquo;does not determine transmission direction.&rdquo; <b>Directionality must
+          come from longitudinal acquisition timing, not from a sharing call.</b></p>
+        <p class="src">Microbiome s40168-025-02051-8 · Nat Microbiol s41564-026-02339-x · inStrain docs</p>
+      </div>
+
+      <div class="claim">
+        <div class="claim-top"><span class="grade g-est">Established</span></div>
+        <h4>The thresholds are concrete — but assume coverage vaginal samples often lack</h4>
+        <p>inStrain: <span class="k">popANI ≥ 99.999%</span> + <span class="k">≥50% genome compared</span>; ~50% breadth needs
+          ~1× but full breadth needs &gt;6×, and detection needs thousands of mapped reads — self-declared &ldquo;less ideal for
+          low depth.&rdquo; StrainGE detects sharing down to <b>0.5×</b> (markers cover ~74% of genome vs StrainPhlAn&rsquo;s ~1.4%),
+          but its assembly step degrades on low-biomass input. No single tool cleanly covers the vaginal case.</p>
+        <p class="src">inStrain docs · Genome Biology s13059-022-02630-0</p>
+      </div>
+
+      <div class="claim">
+        <div class="claim-top"><span class="grade g-emg">Emerging / Open</span></div>
+        <h4>The gut-as-reservoir hypothesis is untested — this is the whitespace</h4>
+        <p>The competing reservoir demonstrated so far is <i>endogenous vaginal</i> strains. Whether a <span class="site gut">gut</span>
+          <i>Lactobacillus</i> (or <i>Gardnerella</i>/<i>Prevotella</i>/<i>E.&nbsp;coli</i>/enterococcal) reservoir seeds the
+          <span class="site fgt">vagina</span> and predicts engraftment is unexamined. Recent vaginal strain work analysed 354
+          vaginal metagenomes and <i>zero</i> gut samples. <i>L.&nbsp;crispatus</i> is more strain-diverse than <i>L.&nbsp;iners</i> —
+          the better cross-site tracer.</p>
+        <p class="src">npj Biofilms s41522-025-00682-1 · Cell Host &amp; Microbe S1931-3128(26)00090-9</p>
+      </div>
+
+      <div class="claim">
+        <div class="claim-top"><span class="grade g-emg">Emerging / Open</span></div>
+        <h4>HIV/ART reshape the gut in a geography-dependent way — cross-site effect unknown</h4>
+        <p>Ragon/Broad metagenomics of 327 people with HIV + 260 controls (Uganda, Botswana, USA) found HIV-associated shifts are
+          mostly site-specific. Whether HIV/ART or geography changes <span class="site gut">gut</span>→<span class="site fgt">FGT</span>
+          translocation is a novel extension over cohorts the lab already has.</p>
+        <p class="src">Nat Microbiol s41564-025-02157-7</p>
+      </div>
+
+      <div class="claim refuted">
+        <div class="claim-top"><span class="grade g-ref">Do not build on</span></div>
+        <h4>&ldquo;SNPs prove vagina→uterus directional translocation&rdquo; — refuted (0–3 / 1–2)</h4>
+        <p>Two attempts to source directional cross-site SNP evidence from the 2021 Nat&nbsp;Commun uterus/vagina paper failed
+          verification. Do <i>not</i> cite cross-site directionality as established. Likewise the most optimistic StrainGE figure
+          (0.1× / &lt;0.1% abundance) was refuted (0–3) — <b>0.5× is the defensible low-coverage bound.</b></p>
+        <p class="src">refuted: Nat Commun s41467-021-24516-8 · Genome Biology s13059-022-02630-0</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PART II ================= -->
+  <section>
+    <div class="sec-head"><span class="sec-num">II</span><h2>What the tool is — and what it must detect</h2></div>
+    <p class="sec-sub">Your BIOAI pipeline already implements the hard middle. The tool wraps it into something portable and
+      standardized, then adds the three things the evidence in Part&nbsp;I says are missing: a low-biomass path, honest direction
+      handling, and confound filters.</p>
+
+    <div class="pipe">
+      <div class="pipe-flow">
+        <div class="node src-gut">
+          <span class="n-lab">Input A</span>
+          <span class="n-title">Gut metagenome</span>
+          <span class="n-body">stool / rectal shotgun. The candidate reservoir.</span>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node core">
+          <span class="n-lab">Core engine · you have this</span>
+          <span class="n-title">profile → compare</span>
+          <span class="n-body">inStrain popANI, dual-reported at 0.999 and canonical 0.99999; breadth ≥ 0.5; within-vs-between-person null built in.</span>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node src-fgt">
+          <span class="n-lab">Input B</span>
+          <span class="n-title">Vaginal metagenome</span>
+          <span class="n-body">low-biomass. The recipient site.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modules">
+      <div class="mod">
+        <span class="m-id">M1</span>
+        <div>
+          <h4>Shared-strain call <span class="pill have">have · BIOAI</span></h4>
+          <p>The locked-threshold popANI call and the within-vs-between-person null — your existing <code>05_shared_strain_analysis.py</code>. This is the rigor move most papers skip; it stays the core.</p>
+        </div>
+      </div>
+      <div class="mod">
+        <span class="m-id">M2</span>
+        <div>
+          <h4>Contamination discriminator <span class="pill have">have · BIOAI</span></h4>
+          <p>Shared strain + <i>dissimilar</i> community (Bray–Curtis) = translocation; + <i>similar</i> community = cross-swab contamination. Add same-plate / CroCoDeEL flags when plate layout exists.</p>
+        </div>
+      </div>
+      <div class="mod">
+        <span class="m-id">M3</span>
+        <div>
+          <h4>Low-biomass fallback path <span class="pill build">build</span></h4>
+          <p>When a vaginal sample fails inStrain&rsquo;s coverage floor, route the target through <b>StrainGE</b> (down to 0.5×). Directly answers inStrain&rsquo;s self-declared low-depth weakness — the single biggest failure mode for FGT samples.</p>
+        </div>
+      </div>
+      <div class="mod">
+        <span class="m-id">M4</span>
+        <div>
+          <h4>Direction inference — honest by construction <span class="pill build">build</span></h4>
+          <p>Never infer direction from a sharing call. With longitudinal timepoints, call direction from <b>acquisition timing</b> (<span class="site gut">gut</span>-before-<span class="site fgt">vagina</span> vs reverse). Cross-sectional pairs are reported as <b>&ldquo;shared, direction-unresolved&rdquo;</b> — not guessed.</p>
+        </div>
+      </div>
+      <div class="mod">
+        <span class="m-id">M5</span>
+        <div>
+          <h4>Generalist-strain filter <span class="pill build">build</span></h4>
+          <p>Down-weight strains shared across unrelated people (the confound Part&nbsp;I flags). Focus calls on recently-acquired, person-specific strains to cut false sharing.</p>
+        </div>
+      </div>
+      <div class="mod">
+        <span class="m-id">M6</span>
+        <div>
+          <h4>The standard: fixed thresholds + portable config <span class="pill build">build · this is #4</span></h4>
+          <p>Package M1–M5 as a versioned Snakemake/Nextflow workflow with <i>fixed, reference-based</i> thresholds and a citable spec — exactly VALENCIA&rsquo;s move from per-study clustering to comparable calls. Precedent exists: SameStr already ships defaults (MVS ≥99.9% over ≥5&nbsp;kb).</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="callout" style="margin-top:22px"><b>Why this is credible, not speculative:</b> M1–M2 are running code today. M3–M6
+      are integration and packaging of published methods, not new algorithms. The novelty is the <i>standard</i> and the
+      <i>application</i>, which is exactly why VALENCIA — also &ldquo;just&rdquo; a nearest-centroid classifier — became field infrastructure.</p>
+  </section>
+
+  <!-- ================= PART III ================= -->
+  <section>
+    <div class="sec-head"><span class="sec-num">III</span><h2>Complementary research the tool unlocks</h2></div>
+    <p class="sec-sub">Four studies, each anchored to a specific Kwon Lab paper and a cohort type the lab already works in. The
+      plum cell is what the tool detects that nothing else currently can.</p>
+
+    <div class="studies">
+
+      <div class="study">
+        <div class="study-head">
+          <span class="s-tag">Study A · flagship</span>
+          <h3>Does a gut <i>Lactobacillus</i> reservoir predict engraftment?</h3>
+        </div>
+        <div class="study-body">
+          <div class="sb-cell"><div class="sb-lab">Extends</div><p>The CTV-05 &ldquo;competing reservoir&rdquo; finding (Cell Host &amp; Microbe 2026).</p></div>
+          <div class="sb-cell"><div class="sb-lab">Cohort</div><p>VMT / LACTIN-V recipients with <i>paired stool</i> at baseline + follow-up.</p></div>
+          <div class="sb-cell detects"><div class="sb-lab">Tool detects</div><p>Whether recipients carrying a <span class="site gut">gut</span> <i>L.&nbsp;crispatus</i> strain engraft better/worse — and if the engrafting strain is donor, vaginal-endogenous, or <b>gut-seeded</b>.</p></div>
+        </div>
+      </div>
+
+      <div class="study">
+        <div class="study-head">
+          <span class="s-tag">Study B</span>
+          <h3>BV recurrence: strain persistence vs re-seeding</h3>
+        </div>
+        <div class="study-body">
+          <div class="sb-cell"><div class="sb-lab">Extends</div><p>Metronidazole → <i>L.&nbsp;iners</i> dominance &amp; cystine-uptake inhibition (Nat Microbiol 2022).</p></div>
+          <div class="sb-cell"><div class="sb-lab">Cohort</div><p>Longitudinal post-treatment BV, weekly <span class="site fgt">vaginal</span> + <span class="site gut">gut</span>.</p></div>
+          <div class="sb-cell detects"><div class="sb-lab">Tool detects</div><p>Is relapsing <i>L.&nbsp;iners</i> the <b>same persisting strain</b>, a re-seeded strain from the gut, or newly acquired? Only longitudinal strain identity can separate these.</p></div>
+        </div>
+      </div>
+
+      <div class="study">
+        <div class="study-head">
+          <span class="s-tag">Study C</span>
+          <h3>HIV/ART × geography and cross-site translocation</h3>
+        </div>
+        <div class="study-body">
+          <div class="sb-cell"><div class="sb-lab">Extends</div><p>Geography-dependent HIV gut effects (Nat Microbiol 2025).</p></div>
+          <div class="sb-cell"><div class="sb-lab">Cohort</div><p>Existing South Africa / Uganda / Zimbabwe / Botswana cohorts; add paired FGT sampling.</p></div>
+          <div class="sb-cell detects"><div class="sb-lab">Tool detects</div><p>Whether HIV/ART or region shifts the <b>rate of <span class="site gut">gut</span>→<span class="site fgt">FGT</span> strain sharing</b> — a mucosal-barrier readout tied to the lab&rsquo;s translocation work.</p></div>
+        </div>
+      </div>
+
+      <div class="study">
+        <div class="study-head">
+          <span class="s-tag">Study D · the methods paper</span>
+          <h3>The &ldquo;VALENCIA-for-strains&rdquo; standard itself</h3>
+        </div>
+        <div class="study-body">
+          <div class="sb-cell"><div class="sb-lab">Extends</div><p>VALENCIA&rsquo;s standardization logic (Microbiome 2020).</p></div>
+          <div class="sb-cell"><div class="sb-lab">Cohort</div><p>Your Goltsman/DiGiulio pilot (PRJNA288562) + synthetic ground truth + the 191-sample V–R set.</p></div>
+          <div class="sb-cell detects"><div class="sb-lab">Tool detects</div><p>Benchmarks fixed thresholds, the within/between null, contamination + low-biomass handling into one citable spec. <b>This is the paper that makes A–C comparable</b> and is closest to shippable now.</p></div>
+        </div>
+      </div>
+
+    </div>
+
+    <p style="margin-top:24px" class="measure"><b>Sequencing suggestion.</b> Ship <b>D</b> first — it&rsquo;s your pilot promoted
+      to a methods paper and it earns the tool its citation. Then <b>A</b> is the highest-impact biology and the most direct extension
+      of the lab&rsquo;s newest flagship. <b>B</b> and <b>C</b> follow as the standard proves out.</p>
+  </section>
+
+  <!-- ================= PART IV ================= -->
+  <section>
+    <div class="sec-head"><span class="sec-num">IV</span><h2>Risks the tool must handle up front</h2></div>
+    <p class="sec-sub">These are the failure modes reviewers will raise. Each already has a mitigation in the module map — stating
+      them plainly is what separates a standard from a script.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Risk</th><th>Why it bites here</th><th>Mitigation</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>Direction is unknowable from sharing</b></td>
+            <td>Every existing tool (inStrain, StrainPhlAn, StrainGE, TRACS) refuses to call direction.</td>
+            <td><span class="fix">M4</span> — direction only from longitudinal timing; cross-sectional flagged unresolved.</td>
+          </tr>
+          <tr>
+            <td><b>Low-biomass vaginal samples fail coverage</b></td>
+            <td>inStrain needs &gt;6× for full breadth; many FGT samples never reach it.</td>
+            <td><span class="fix">M3</span> — StrainGE fallback to 0.5× (0.1× claim is refuted; don&rsquo;t promise it).</td>
+          </tr>
+          <tr>
+            <td><b>Sensitivity/specificity cliff</b></td>
+            <td>Stringent cutoffs drop ~91% of true sharing; loose ones admit environmental look-alikes.</td>
+            <td>Dual-report both thresholds + <span class="fix">M1</span> within/between null as the real significance test.</td>
+          </tr>
+          <tr>
+            <td><b>Shared-environment confound</b></td>
+            <td>Diet/cohabitation inflate sharing with no transmission at all.</td>
+            <td><span class="fix">M5</span> generalist-strain filter + <span class="fix">M2</span> community-dissimilarity check.</td>
+          </tr>
+          <tr>
+            <td><b>Cross-swab contamination masquerades as translocation</b></td>
+            <td>A whole-community &ldquo;soup&rdquo; transfer looks identical to one strain moving.</td>
+            <td><span class="fix">M2</span> — translocation = shared strain + dissimilar community; else flag.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <p><b>Provenance.</b> Landscape synthesized from a verified deep-research pass (5 angles · 21 sources fetched · 98 claims
+      extracted · 25 adversarially verified, 22 confirmed / 3 refuted). Tool architecture derived from the existing BIOAI pilot
+      (<span class="k">C:\Jeanyu\BIOAI</span>). Grades reflect verification confidence, not certainty — treat Emerging/Open items
+      as hypotheses the studies would test, and never cite the Refuted row.</p>
+    <div class="src-list">
+      <span>medRxiv 2025.08.27.25334544 — VMT donor-strain engraftment</span>
+      <span>Cell Host &amp; Microbe S1931-3128(26)00090-9 — CTV-05 / competing reservoir</span>
+      <span>inStrain docs — popANI 99.999% / breadth / coverage</span>
+      <span>Genome Biology s13059-022-02630-0 — StrainGE low-coverage (0.5×)</span>
+      <span>Microbiome s40168-025-02051-8 — shared-environment confound</span>
+      <span>Nat Microbiol s41564-026-02339-x — TRACS (no direction)</span>
+      <span>Microbiome s40168-020-00934-6 — VALENCIA</span>
+      <span>Nat Microbiol s41564-025-02157-7 — HIV/ART geography-dependent gut</span>
+      <span>Nat Microbiol s41564-022-01070-7 — metronidazole / L. iners / cystine</span>
+      <span>npj Biofilms s41522-025-00682-1 — vaginal strain diversity (gut absent)</span>
+    </div>
+  </footer>
+
+</div>
