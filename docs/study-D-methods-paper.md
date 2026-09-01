@@ -91,7 +91,8 @@ A versioned spec (`strainshare_standard.yaml`, `spec_version` 0.1.0) fixing:
 - **F4** direction calls on longitudinal events (gut-first vs vagina-first vs unresolved)
 - **F5** generalist filter — between-person shared rate per genome; what it removes and why
 - **F6** precision edge — popANI vs near-boundary divergence across species; resolution limit of the 0.999 threshold (~0.1%)
-- **Table 1** the standard, versioned, side-by-side with inStrain/StrainPhlAn/StrainGE/SameStr/TRACS defaults
+- **Table 1** the standard, versioned, side-by-side with inStrain/StrainPhlAn/StrainGE/SameStr/TRACS defaults —
+  **drafted:** [`table1-tool-comparison.md`](table1-tool-comparison.md)
 
 ## Validation / claims we can defend
 
