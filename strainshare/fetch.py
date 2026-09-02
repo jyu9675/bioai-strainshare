@@ -92,5 +92,7 @@ def fetch_to_sheet(bioproject, outdir, site_map, alias_re=DEFAULT_ALIAS_RE,
     if do_download and len(sheet):
         sheet = download(sheet, outdir)
     path = os.path.join(outdir, "samples.tsv")
-    sheet.to_csv(path, sep="\t", index=False)
+    # force LF endings — the sheet is consumed by bash/Snakemake, where a CRLF trailing \r
+    # corrupts the last field (e.g. the fastq URL).
+    sheet.to_csv(path, sep="\t", index=False, lineterminator="\n")
     return sheet, path
