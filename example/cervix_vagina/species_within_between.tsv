@@ -1,0 +1,4 @@
+genome	within_shared_rate	within_n_shared	within_n_pairs	between_shared_rate	between_n_shared	between_n_pairs	within_minus_between
+G_vaginalis.fna	1.0	2	2	0.0	0	10	1.0
+L_crispatus.fna	1.0	1	1	0.0	0	1	1.0
+L_iners.fna	1.0	3	3	0.16666666666666666	2	12	0.8333333333333334

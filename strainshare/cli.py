@@ -59,8 +59,12 @@ def _cmd_benchmark(a):
 
 
 def _cmd_diagnostic(a):
+    cfg = load_config(a.config)
+    if a.site_pair:
+        cfg = dict(cfg)
+        cfg["site_pair"] = [s.strip() for s in a.site_pair.split(",")]
     pairs = pd.read_csv(a.pairs, sep="\t")
-    conf = plots.popani_breadth(pairs, a.out, title=a.title)
+    conf = plots.popani_breadth(pairs, a.out, title=a.title, cfg=cfg)
     print(f"[diagnostic] {len(conf)} comparison(s) in the confident-call box -> {a.out}")
 
 
@@ -111,6 +115,8 @@ def build_parser():
     d.add_argument("--pairs", required=True)
     d.add_argument("--out", required=True)
     d.add_argument("--title", default="")
+    d.add_argument("--site-pair", dest="site_pair", default=None, help="e.g. 'cervix,vagina'")
+    d.add_argument("--config", default=None)
     d.set_defaults(func=_cmd_diagnostic)
 
     f = sub.add_parser("fetch", help="build a sample sheet from an ENA BioProject (public data)")
