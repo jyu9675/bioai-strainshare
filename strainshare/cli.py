@@ -64,6 +64,18 @@ def _cmd_diagnostic(a):
     print(f"[diagnostic] {len(conf)} comparison(s) in the confident-call box -> {a.out}")
 
 
+def _cmd_fetch(a):
+    from . import fetch
+    site_map = fetch.parse_site_map(a.site_map)
+    sheet, path = fetch.fetch_to_sheet(
+        a.bioproject, a.outdir, site_map,
+        paired_only=not a.all_samples, max_subjects=a.max_subjects, do_download=a.download)
+    n_sub = sheet.subject.nunique() if len(sheet) else 0
+    by_site = sheet.bodysite.value_counts().to_dict() if len(sheet) else {}
+    print(f"[fetch] {a.bioproject}: {len(sheet)} samples, {n_sub} subjects, sites={by_site}")
+    print(f"[fetch] wrote {path}" + ("" if a.download else "  (fq1/fq2 are ENA URLs; add --download to pull fastqs)"))
+
+
 def _cmd_version(a):
     print(f"strainshare {__version__} (standard spec {SPEC_VERSION})")
 
@@ -100,6 +112,18 @@ def build_parser():
     d.add_argument("--out", required=True)
     d.add_argument("--title", default="")
     d.set_defaults(func=_cmd_diagnostic)
+
+    f = sub.add_parser("fetch", help="build a sample sheet from an ENA BioProject (public data)")
+    f.add_argument("--bioproject", required=True, help="ENA/SRA BioProject, e.g. PRJNA982400")
+    f.add_argument("--outdir", default="data")
+    f.add_argument("--site-map", dest="site_map", default="V=vagina,C=cervix,R=rectum,G=gut,O=oral",
+                   help="alias site-code -> bodysite, e.g. 'V=vagina,C=cervix,R=rectum'")
+    f.add_argument("--max-subjects", dest="max_subjects", type=int, default=None,
+                   help="cap to the first N subjects (for a quick test)")
+    f.add_argument("--all", dest="all_samples", action="store_true",
+                   help="keep all samples (default keeps only subjects with >=2 sites)")
+    f.add_argument("--download", action="store_true", help="download fastqs (large!)")
+    f.set_defaults(func=_cmd_fetch)
 
     v = sub.add_parser("version", help="print version")
     v.set_defaults(func=_cmd_version)

@@ -160,6 +160,26 @@ def oral_gut():
     return pd.DataFrame(C), meta, mpa
 
 
+def test_fetch_parse_and_sheet():
+    from strainshare import fetch
+    smap = fetch.parse_site_map("V=vagina,C=cervix,R=rectum")
+    assert fetch.parse_alias("95V", smap) == ("95", "vagina")
+    assert fetch.parse_alias("90C", smap) == ("90", "cervix")
+    assert fetch.parse_alias("weird_id", smap) == (None, None)
+
+    runs = pd.DataFrame([
+        dict(sample_alias="1V", library_strategy="WGS", fastq_ftp="host/1V_1.fq.gz;host/1V_2.fq.gz"),
+        dict(sample_alias="1C", library_strategy="WGS", fastq_ftp="host/1C_1.fq.gz;host/1C_2.fq.gz"),
+        dict(sample_alias="2V", library_strategy="WGS", fastq_ftp="host/2V_1.fq.gz;host/2V_2.fq.gz"),  # unpaired subject
+        dict(sample_alias="3V", library_strategy="16S", fastq_ftp="host/3V_1.fq.gz;host/3V_2.fq.gz"),  # not WGS
+    ])
+    sheet = fetch.build_sheet(runs, smap, paired_only=True)
+    # only subject 1 has two sites -> kept; subject 2 (single site) and 3 (16S) dropped
+    assert set(sheet.subject) == {"1"}
+    assert set(sheet.bodysite) == {"vagina", "cervix"}
+    assert sheet.fq1.str.startswith("https://").all()
+
+
 def test_site_pair_generalization(oral_gut):
     compare, meta, mpa = oral_gut
     cfg = dict(STANDARD)

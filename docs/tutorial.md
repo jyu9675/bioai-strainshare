@@ -60,6 +60,28 @@ Only points in the top-right box (popANI ≥ 0.999 **and** breadth ≥ 0.5) are 
 > **Scaling caveat.** The all-samples `inStrain compare` can exhaust memory on large cohorts. A
 > chunked/streaming compare is the Item-3 work; for moderate cohorts the standard path is fine.
 
+## Fetch a public dataset (ENA → sample sheet)
+
+`strainshare fetch` turns an ENA BioProject into a ready sample sheet by parsing each sample's
+alias into a subject id + a site code (many cohorts encode this, e.g. `95V` = subject 95 vaginal,
+`90C` = cervical). It keeps only WGS runs and, by default, only subjects sampled at ≥2 sites.
+
+```bash
+# 12 paired subjects (vagina + cervix) from a public cohort, metadata only:
+strainshare fetch --bioproject PRJNA982400 --site-map "V=vagina,C=cervix,R=rectum" \
+    --max-subjects 12 --outdir data/mycohort
+# -> data/mycohort/samples.tsv (fq1/fq2 are ENA URLs)
+
+# add --download to pull the fastqs (large!), then point the workflow at the sheet:
+snakemake -j8 --configfile workflow/config.yaml     # samples: data/mycohort/samples.tsv
+strainshare analyze --compare ... --site-pair cervix,vagina ...
+```
+
+Finding datasets: they must be **shotgun WGS** and sample **≥2 body sites from the same people**.
+Good public options: **HMP1** (stool + posterior-fornix + oral, portal.hmpdacc.org), **PRJNA982400**
+(vaginal + cervical), **Goltsman PRJNA288562** (vaginal + gut, shallow). MOMS-PI (vagina+rectum) is
+dbGaP controlled-access.
+
 ## Other body-site pairs
 
 The default is gut↔vagina, but the same machinery works for **any two sites** present in your
