@@ -160,6 +160,15 @@ def oral_gut():
     return pd.DataFrame(C), meta, mpa
 
 
+def test_match_sample_suffixes():
+    idx = pd.Index(["65C", "65V", "S1_gut_30"])
+    assert analysis.match_sample("65C", idx) == "65C"
+    assert analysis.match_sample("65C.bam", idx) == "65C"          # inStrain bam basename
+    assert analysis.match_sample("65V.sorted.bam", idx) == "65V"
+    assert analysis.match_sample("S1_gut_30.IS", idx) == "S1_gut_30"
+    assert analysis.match_sample("unknown.bam", idx) is None
+
+
 def test_fetch_parse_and_sheet():
     from strainshare import fetch
     smap = fetch.parse_site_map("V=vagina,C=cervix,R=rectum")

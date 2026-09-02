@@ -94,8 +94,14 @@ def fig3(cand, meta, outdir, cfg=None):
 def all_figures(pairs, cand, meta, outdir, cfg=None, seed=0):
     os.makedirs(outdir, exist_ok=True)
     np.random.seed(seed)
+    if pairs is None or pairs.empty:
+        print("Figures skipped: no comparable pairs.")
+        return
     fig1(pairs, outdir, cfg)
-    fig2(pairs, outdir, cfg)
+    if pairs.bray_curtis.notna().any():
+        fig2(pairs, outdir, cfg)
+    else:
+        print("Fig 2 skipped: no community (Bray–Curtis) data.")
     fig3(cand, meta, outdir, cfg)
 
 

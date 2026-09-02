@@ -13,6 +13,22 @@ import pandas as pd
 from .config import STANDARD, site_classes
 
 
+# inStrain `compare` names samples by the input basename, which often carries a suffix
+# (e.g. "65C.bam", "65C.sorted.bam", "65C.IS") that the metadata `sample` column lacks.
+_SAMPLE_SUFFIXES = (".sorted.bam", ".bam", ".sorted", ".IS")
+
+
+def match_sample(name, index):
+    """Resolve a compare-table name to a metadata sample id, tolerating inStrain suffixes."""
+    name = str(name)
+    if name in index:
+        return name
+    for suf in _SAMPLE_SUFFIXES:
+        if name.endswith(suf) and name[: -len(suf)] in index:
+            return name[: -len(suf)]
+    return None
+
+
 def bray_curtis(a, b):
     a = a.fillna(0).values
     b = b.fillna(0).values
@@ -45,22 +61,25 @@ def analyze(compare, meta, mpa, cfg=None):
     breadth = cfg["shared_strain"]["breadth_min"]
     bc_sim = cfg["contamination"]["bray_curtis_similar_max"]
     site_a, site_b, within_cls, between_cls = site_classes(cfg)
+    # inStrain builds differ: newer output uses `percent_compared`, older `percent_genome_compared`.
+    brcol = "percent_compared" if "percent_compared" in compare.columns else "percent_genome_compared"
 
     meta = meta.set_index("sample")
     mpa = mpa[[c for c in mpa.columns if c in meta.index]]
 
     rows = []
     for _, x in compare.iterrows():
-        s1, s2 = x["name1"], x["name2"]
-        if s1 not in meta.index or s2 not in meta.index:
+        s1 = match_sample(x["name1"], meta.index)
+        s2 = match_sample(x["name2"], meta.index)
+        if s1 is None or s2 is None:
             continue
         r1, r2 = meta.loc[s1], meta.loc[s2]
         cls = classify_pair(r1, r2, (site_a, site_b))
-        shared = (x["popANI"] >= popani) and (x["percent_genome_compared"] >= breadth)
+        shared = (x["popANI"] >= popani) and (x[brcol] >= breadth)
         bc = bray_curtis(mpa[s1], mpa[s2]) if (s1 in mpa.columns and s2 in mpa.columns) else np.nan
         rows.append(dict(genome=x["genome"], s1=s1, s2=s2, subject1=r1.subject, subject2=r2.subject,
                          site1=r1.bodysite, site2=r2.bodysite, pair_class=cls,
-                         popANI=x["popANI"], breadth=x["percent_genome_compared"],
+                         popANI=x["popANI"], breadth=x[brcol],
                          shared_strain=shared, bray_curtis=bc))
     pairs = pd.DataFrame(rows, columns=["genome", "s1", "s2", "subject1", "subject2", "site1",
                                         "site2", "pair_class", "popANI", "breadth",
