@@ -60,3 +60,7 @@ Thumbs.db
 build/
 dist/
 .pytest_cache/
+
+# scratch: ENA metadata dumps + dataset pick files (root-level)
+/_*.tsv
+/_*.csv
