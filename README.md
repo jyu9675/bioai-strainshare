@@ -12,7 +12,8 @@ generalist-strain filter, longitudinal-only transmission-direction inference, an
 fallback — so shared-strain calls are **comparable across studies and labs**, the way VALENCIA
 standardized vaginal community-state typing.
 
-📖 [Install](docs/install.md) · [Tutorial](docs/tutorial.md) · [Lab onboarding](docs/ONBOARDING.md) ·
+📖 **New here? Start with the [Step-by-Step User Guide](docs/USER_GUIDE.md)** (beginner-friendly, no Python needed, PC/Mac/Linux).
+· [Install](docs/install.md) · [Tutorial](docs/tutorial.md) · [Lab onboarding](docs/ONBOARDING.md) ·
 [The standard](strainshare/strainshare_standard.yaml) · [Manuscript draft](docs/manuscript-draft.md)
 
 ## Install
