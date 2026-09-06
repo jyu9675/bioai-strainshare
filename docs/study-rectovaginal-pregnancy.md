@@ -97,19 +97,26 @@ under limited hygiene/healthcare access.
 7. **Outcome association (Aim 3):** shared-strain status vs BV/GBS/infection/preterm-birth.
 8. **Risk-factor models (Aim 4):** transmission vs WASH/access covariates (logistic/mixed models).
 
-## 7. Available public data — honest map (to pilot or complement; verify each)
+## 7. Available public data — honest map (verified 2026-09)
 
-No single open dataset is *pregnant + low-resource + paired rectal-vaginal + deep shotgun + longitudinal*
-— which is precisely why a dedicated cohort (or the Kwon Lab's 382 paired vaginal-rectal set) is the real
-vehicle. Useful pieces to pilot the pipeline:
+The five requirements for a strain-level test are: **(i) DNA shotgun** (not 16S/RNA), **(ii) paired
+rectal + vaginal from the same women**, **(iii) pregnancy**, **(iv) low-resource setting**, **(v) open
+access**. We checked the leading candidates against all five:
 
-| Dataset | Fit | Caveats |
-|---|---|---|
-| **MOMS-PI** (dbGaP phs001523) | Pregnancy, vagina + **rectum** + mouth/skin, longitudinal, deep | US (not low-resource); **controlled access** (application/DUA) |
-| **PRJNA798597** — South Africa, pregnant, gut+vaginal+oral [3] | Low-resource-relevant population | verify shotgun vs 16S; "gut" (stool) not rectal swab; pre-eclampsia focus |
-| **PRJDB10581** — oral+vaginal+**rectal** in pregnancy (pilot) | Paired rectal+vaginal | likely 16S; small; not low-resource |
-| **PRJNA826539** — Fijian, rectal+vaginal+cervical (n=10) | Low-resource Pacific; **rectal+vaginal shotgun** | not confirmed pregnant; small; host-removed |
-| **GBS isolate WGS** — Ethiopia/Nigeria/Sri Lanka [2] | Low-resource, GBS-specific, WGS | *isolates*, not paired metagenomes — good for GBS strain reference/context |
+| Dataset | (i) DNA shotgun | (ii) rectal+vaginal | (iii) pregnancy | (iv) low-resource | (v) open | Verdict |
+|---|:--:|:--:|:--:|:--:|:--:|---|
+| **PRJNA798597** (South Africa) | ❌ RNA-Seq | ✅ (R/V/O) | ✅ | ✅ | ✅ | **Not usable for strain** — metatranscriptomic (60 runs, `RNA-Seq`); right cohort, wrong molecule. Could show *active* taxa co-occurrence only. |
+| **MOMS-PI** (phs001523) | ✅ | ⚠️ WGS looks **vaginal-only** | ✅ | ❌ US | ❌ dbGaP | Best design, but shotgun is **controlled** (eRA Commons+IRB+DUA) and appears vaginal-swab-focused — **confirm rectal WGS before applying**. Open portion is 16S/cytokines only. |
+| **PRJNA826539** (Fijian, n=10) | ✅ | ✅ | ❓ not confirmed | ✅ Pacific | ✅ | **Only open DNA rectal+vaginal set** — but *E. coli* was rectum-only and GBS undetected in the 3 women tested, so it doesn't show pathogen transmission either. |
+| **PRJDB10581** (pregnancy R/V/O pilot) | ⚠️ likely 16S | ✅ | ✅ | ❌ Japan | ✅ | verify amplicon vs shotgun; small pilot. |
+| **GBS isolate WGS** (Ethiopia/Nigeria/Sri Lanka) [2] | ✅ (isolates) | ❌ | ✅ | ✅ | ✅ | *Cultured isolates*, not paired metagenomes — valuable as **GBS strain reference/context**, not for in-situ transmission. |
+
+**Verified bottom line:** **no open dataset satisfies all five criteria** — the pieces are split across
+molecule, sites, population, and access. This is not a dead end; it is the **justification for the
+proposed study**: the definitive cohort must be **prospectively collected** (a low-resource pregnancy
+cohort with paired rectal+vaginal *DNA* shotgun, longitudinal) — or accessed via a **dbGaP application to
+MOMS-PI** (after confirming it contains paired rectal WGS). The Kwon Lab's 382-sample paired
+vaginal–rectal set is the closest deep, in-hand vehicle to adapt the pregnancy/low-resource arms onto.
 
 ## 8. Expected outcomes & translational value
 
