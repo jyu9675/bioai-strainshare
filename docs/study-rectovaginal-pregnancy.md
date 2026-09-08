@@ -108,6 +108,7 @@ access**. We checked the leading candidates against all five:
 | **PRJNA798597** (South Africa) | ❌ RNA-Seq | ✅ (R/V/O) | ✅ | ✅ | ✅ | **Not usable for strain** — metatranscriptomic (60 runs, `RNA-Seq`); right cohort, wrong molecule. Could show *active* taxa co-occurrence only. |
 | **MOMS-PI** (phs001523) | ✅ | ⚠️ WGS looks **vaginal-only** | ✅ | ❌ US | ❌ dbGaP | Best design, but shotgun is **controlled** (eRA Commons+IRB+DUA) and appears vaginal-swab-focused — **confirm rectal WGS before applying**. Open portion is 16S/cytokines only. |
 | **PRJNA826539** (Fijian, n=10) | ✅ | ✅ | ❓ not confirmed | ✅ Pacific | ✅ | **Only open DNA rectal+vaginal set** — but *E. coli* was rectum-only and GBS undetected in the 3 women tested, so it doesn't show pathogen transmission either. |
+| **HMP1** (phs000228) | ✅ WGS | ⚠️ **stool**+vaginal (gut proxy, not rectal swab) | ❌ non-pregnant | ❌ US, well-resourced | ✅ **open on AWS S3** (no dbGaP) | **Best open *baseline-mechanism* test.** Verified 2026-09: **34 women** with paired stool + posterior-fornix shotgun WGS (51 vaginal / 48 stool samples; several women 2–6 visits → some longitudinal). ~342 GB (stool 332 GB) — run in-cloud (us-west-2). Tests gut↔vaginal strain sharing at *n=34*, but not the pregnancy/hygiene angle. |
 | **PRJDB10581** (pregnancy R/V/O pilot) | ⚠️ likely 16S | ✅ | ✅ | ❌ Japan | ✅ | verify amplicon vs shotgun; small pilot. |
 | **GBS isolate WGS** (Ethiopia/Nigeria/Sri Lanka) [2] | ✅ (isolates) | ❌ | ✅ | ✅ | ✅ | *Cultured isolates*, not paired metagenomes — valuable as **GBS strain reference/context**, not for in-situ transmission. |
 
@@ -117,6 +118,15 @@ proposed study**: the definitive cohort must be **prospectively collected** (a l
 cohort with paired rectal+vaginal *DNA* shotgun, longitudinal) — or accessed via a **dbGaP application to
 MOMS-PI** (after confirming it contains paired rectal WGS). The Kwon Lab's 382-sample paired
 vaginal–rectal set is the closest deep, in-hand vehicle to adapt the pregnancy/low-resource arms onto.
+
+**For a de-risking baseline run *now*, HMP1 is the vehicle:** it is the only fully-open (no-dbGaP) paired
+gut+vaginal shotgun set — **34 women**, on AWS S3. It cannot address pregnancy or low-resource, but it can
+answer the prior question cheaply: *does any within-woman gut↔vaginal strain sharing occur at all* (for the
+shareable taxa — *E. coli*, *Prevotella*, *Bacteroides* — since our pilot already showed the *Lactobacillus*/
+*Gardnerella* commensals are not a gut reservoir). A clean negative at n=34 sharpens the case that pregnancy
++ limited hygiene is the specific condition under which transfer occurs; a positive proves the mechanism is
+real in healthy adults and must be controlled for. Best executed on EC2 in **us-west-2** (data-local, fast,
+egress-free) rather than downloaded. Paired sample map: `~/hmp/paired_women2.tsv` (subject → vaginal/stool SRS).
 
 ## 8. Expected outcomes & translational value
 

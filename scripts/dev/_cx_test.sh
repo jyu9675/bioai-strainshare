@@ -26,7 +26,10 @@ tail -n +2 "$PICK" | tr -d '\r' | while IFS=$'\t' read -r sample subject site rc
     [ $ok = 0 ] && break
   done
   if [ $ok = 0 ]; then echo "[cx]   DOWNLOAD FAILED $sample (kept partial for resume)"; continue; fi
-  bowtie2 -x "$REF" -1 "$OUT/fastq/${sample}_1.fq.gz" -2 "$OUT/fastq/${sample}_2.fq.gz" -p 4 2>/dev/null \
+  # UNPAIRED mapping (-U both files): host-removed datasets (e.g. PRJNA826539) can have
+  # desynced/unequal mates that crash bowtie2's paired mode; we use --pairing_filter all_reads
+  # downstream anyway, so mapping each read independently is robust for paired and host-removed data.
+  bowtie2 -x "$REF" -U "$OUT/fastq/${sample}_1.fq.gz,$OUT/fastq/${sample}_2.fq.gz" -p 4 2>/dev/null \
     | samtools sort -@2 -o "$OUT/profiles/$sample.bam" - && samtools index "$OUT/profiles/$sample.bam"
   # --pairing_filter all_reads: host-removal (e.g. PRJNA826539) breaks mate-pairing metadata,
   # which inStrain's default paired_only rejects wholesale ("no paired reads").
