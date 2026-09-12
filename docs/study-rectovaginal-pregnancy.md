@@ -23,8 +23,17 @@ and grounded in established GBS biology.*
   *Atopobium/Fannyhessea*) and *Candida* are also implicated in cross-site movement.
 - **What is NOT a gut reservoir:** the dominant vaginal *commensals* (*Lactobacillus*, and vaginal
   *Gardnerella* genomospecies). In our own strain-level pilot (3 women, deep rectal+vaginal, 33-genome
-  reference), these were deeply covered vaginally (up to 185×) yet **absent from the rectum (0×)** —
-  a clean negative. **So the transmission question must target pathogens/opportunists, not commensals.**
+  reference), these were deeply covered vaginally (*G. vaginalis* **185.0×** at 0.955 breadth; *L. iners*
+  44.9× at 0.959) yet returned **zero rows at any coverage in every rectal profile** — a *true absence*,
+  not a detection limit. Sequencing deeper will not find a reservoir.
+  **So the transmission question must target pathogens/opportunists, not commensals.**
+- **What IS co-detected, but not yet callable:** in those same 3 women, the **BV-associated taxa are
+  present at *both* sites** — *P. bivia* rectally at 6.7–11.4× in **3/3**, *P. amnii* rectum 3.8× ↔
+  vagina 197.7×, *P. disiens* rectum 19.5× ↔ vagina 6.5×, *Sneathia vaginalis* rectum 2.0× ↔ vagina
+  117.3×. Yet **no within-woman cross-site pair yielded a single comparable genome**: the *overlapping*
+  breadth peaks near 0.15, under the 0.5 `percent_compared` floor. **This second negative is
+  depth-limited, not absence** — and it is the direct quantitative justification for the ≥10× target in
+  §4. Details: [`fijian-pilot-findings.md`](./fijian-pilot-findings.md).
 
 **The gap.** Rectovaginal GBS/*E. coli* colonization is well documented by *culture/PCR*, and *isolate*
 whole-genome sequencing exists (incl. low-resource cohorts in Ethiopia, Nigeria, Sri Lanka [2]). But
@@ -66,6 +75,9 @@ under limited hygiene/healthcare access.
   *persistence*, and for separating transmission from shared-environment confounding.
 - **Deep shotgun metagenomics** (target ≥10× breadth on candidate shared taxa — from our benchmarks the
   usable strain-call floor is ~10× on the *compared* organism; low-biomass vaginal samples need depth).
+  This is not a generic aspiration: it is **exactly what the Fijian pilot fell short of**. The BV taxa
+  were co-detected at both sites, but the *overlapping* breadth never cleared 0.5, so zero calls were
+  possible (§1). Depth must be powered on the **cross-site taxon**, not on the sample as a whole.
 - **Contamination controls:** negative controls per plate + plate layout recorded, so cross-sample /
   cross-swab contamination can be flagged (CroCoDeEL + strainshare's community-similarity check) and
   removed — critical, because whole-community contamination mimics sharing.
@@ -77,9 +89,9 @@ under limited hygiene/healthcare access.
 | Priority | Organisms | Why |
 |---|---|---|
 | **Primary** | GBS (*S. agalactiae*), *E. coli* / Enterobacteriaceae | Established rectovaginal transmitters; direct neonatal/maternal disease relevance |
-| **Secondary** | BV-associated: *Gardnerella* spp., *Prevotella bivia/amnii/disiens*, *Sneathia*, *Fannyhessea*, *Atopobium* | Cause vaginal dysbiosis/infection; several co-occur across sites |
+| **Secondary** | BV-associated: *Gardnerella* spp., *Prevotella bivia/amnii/disiens*, *Sneathia*, *Fannyhessea*, *Atopobium* | Cause vaginal dysbiosis/infection; **co-detected at both sites in 3/3 pilot women but below the strain-call floor** (§1) — the highest-value targets to power for |
 | **Also** | *Candida*, enterococci | Clinically relevant cross-site colonizers |
-| **Not the target** | *Lactobacillus*, vaginal commensal *Gardnerella* | Not a gut reservoir (shown in our pilot) — including them dilutes the signal |
+| **Not the target** | *Lactobacillus*, vaginal commensal *Gardnerella* | Not a gut reservoir — **0× rectally at 185× vaginal coverage** in our pilot; including them dilutes the signal |
 
 ## 6. Analysis plan (strainshare pipeline)
 
@@ -107,7 +119,7 @@ access**. We checked the leading candidates against all five:
 |---|:--:|:--:|:--:|:--:|:--:|---|
 | **PRJNA798597** (South Africa) | ❌ RNA-Seq | ✅ (R/V/O) | ✅ | ✅ | ✅ | **Not usable for strain** — metatranscriptomic (60 runs, `RNA-Seq`); right cohort, wrong molecule. Could show *active* taxa co-occurrence only. |
 | **MOMS-PI** (phs001523) | ✅ | ⚠️ WGS looks **vaginal-only** | ✅ | ❌ US | ❌ dbGaP | Best design, but shotgun is **controlled** (eRA Commons+IRB+DUA) and appears vaginal-swab-focused — **confirm rectal WGS before applying**. Open portion is 16S/cytokines only. |
-| **PRJNA826539** (Fijian, n=10) | ✅ | ✅ | ❓ not confirmed | ✅ Pacific | ✅ | **Only open DNA rectal+vaginal set** — but *E. coli* was rectum-only and GBS undetected in the 3 women tested, so it doesn't show pathogen transmission either. |
+| **PRJNA826539** (Fijian, n=10) | ✅ | ✅ | ❓ not confirmed | ✅ Pacific | ✅ | **Only open DNA rectal+vaginal set**; source of our n=3 pilot (§1, [findings](./fijian-pilot-findings.md)). *E. coli* rectum-only and GBS undetected in the 3 women tested → no pathogen transmission shown. Its real value is the **two-negatives result**: commensals truly absent rectally, BV taxa co-detected but sub-threshold. |
 | **HMP1** (phs000228) | ✅ WGS | ⚠️ **stool**+vaginal (gut proxy, not rectal swab) | ❌ non-pregnant | ❌ US, well-resourced | ✅ **open on AWS S3** (no dbGaP) | **Best open *baseline-mechanism* test.** Verified 2026-09: **34 women** with paired stool + posterior-fornix shotgun WGS (51 vaginal / 48 stool samples; several women 2–6 visits → some longitudinal). ~342 GB (stool 332 GB) — run in-cloud (us-west-2). Tests gut↔vaginal strain sharing at *n=34*, but not the pregnancy/hygiene angle. |
 | **PRJDB10581** (pregnancy R/V/O pilot) | ⚠️ likely 16S | ✅ | ✅ | ❌ Japan | ✅ | verify amplicon vs shotgun; small pilot. |
 | **GBS isolate WGS** (Ethiopia/Nigeria/Sri Lanka) [2] | ✅ (isolates) | ❌ | ✅ | ✅ | ✅ | *Cultured isolates*, not paired metagenomes — valuable as **GBS strain reference/context**, not for in-situ transmission. |

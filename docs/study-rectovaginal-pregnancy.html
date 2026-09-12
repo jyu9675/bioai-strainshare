@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Rectovaginal Route</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,620&family=IBM+Plex+Mono:wght@400;500;600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+  :root{
+    --ground:#F4F0EF; --surface:#FBF8F7; --raised:#FFFFFF;
+    --ink:#241A20; --muted:#6E6167; --faint:#938890;
+    --line:#E4DBD8; --line-strong:#D3C7C3;
+    --accent:#9C2B39; --accent-ink:#822330;
+    --teal:#2C5A5F; --ochre:#9C7420;
+    --accent-wash:#F5E7E7; --teal-wash:#E4EDED;
+    --shadow:0 1px 2px rgba(36,26,32,.05),0 12px 32px -20px rgba(36,26,32,.28);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#161114; --surface:#1D171B; --raised:#231C22;
+      --ink:#F1E9EC; --muted:#B6A9AF; --faint:#8B7E84;
+      --line:#312830; --line-strong:#40353D;
+      --accent:#DE7681; --accent-ink:#E68B95;
+      --teal:#79B4B6; --ochre:#D2A65B;
+      --accent-wash:#2A1B20; --teal-wash:#182427;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px -22px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#161114; --surface:#1D171B; --raised:#231C22;
+    --ink:#F1E9EC; --muted:#B6A9AF; --faint:#8B7E84;
+    --line:#312830; --line-strong:#40353D;
+    --accent:#DE7681; --accent-ink:#E68B95;
+    --teal:#79B4B6; --ochre:#D2A65B;
+    --accent-wash:#2A1B20; --teal-wash:#182427;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px -22px rgba(0,0,0,.7);
+  }
+  *{box-sizing:border-box}
+  body{
+    background:var(--ground); color:var(--ink);
+    font-family:"Spectral",Georgia,serif; font-weight:400;
+    line-height:1.62; font-size:18px; letter-spacing:.001em;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1100px;margin:0 auto;padding:0 clamp(20px,5vw,40px)}
+  .col{max-width:680px}
+  h1,h2,h3{font-family:"Fraunces",Georgia,serif;text-wrap:balance;line-height:1.1;font-weight:600}
+  p{margin:0 0 1.05em}
+  a{color:var(--accent-ink);text-underline-offset:2px;text-decoration-thickness:.06em}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:500;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0}
+  .lede{font-size:20px;color:var(--muted)}
+  strong{font-weight:600;color:var(--ink)}
+  em{font-style:italic}
+
+  /* ---------- hero ---------- */
+  header.hero{border-bottom:1px solid var(--line);background:
+    radial-gradient(120% 130% at 88% -10%,var(--accent-wash) 0%,transparent 46%);}
+  .hero-inner{padding:clamp(48px,8vw,92px) 0 clamp(40px,6vw,60px)}
+  .hero h1{font-size:clamp(44px,8.2vw,88px);margin:.28em 0 .1em;letter-spacing:-.018em;
+    font-optical-sizing:auto}
+  .hero .thesis{font-size:clamp(20px,2.5vw,25px);color:var(--ink);max-width:30ch;
+    font-weight:500;line-height:1.32;margin:.5em 0 1.35em}
+  .provenance{display:flex;flex-wrap:wrap;gap:8px 10px;font-family:"IBM Plex Mono",monospace;
+    font-size:12.5px;color:var(--muted)}
+  .provenance span{border:1px solid var(--line-strong);border-radius:100px;padding:5px 12px;
+    background:var(--surface);white-space:nowrap}
+
+  /* ---------- transmission diagram ---------- */
+  .diagram{margin:clamp(30px,5vw,46px) 0 0}
+  .diagram figcaption{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--faint);
+    letter-spacing:.04em;margin-top:12px;text-transform:uppercase}
+  svg .lab{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.02em;fill:var(--muted)}
+  svg .node-t{font-family:"Fraunces",serif;font-size:15px;font-weight:600;fill:var(--ink)}
+  svg .gate-t{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:500;fill:var(--accent)}
+  svg .val{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:500;fill:var(--ink)}
+
+  /* ---------- stat band ---------- */
+  .band{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+    padding:clamp(26px,4vw,38px) 0}
+  .stat{padding:6px clamp(16px,2.6vw,30px);border-left:1px solid var(--line)}
+  .stat:first-child{border-left:0}
+  .stat .n{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(30px,4.4vw,42px);
+    line-height:1;color:var(--accent);letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+  .stat .k{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);
+    margin-top:10px;line-height:1.45}
+  @media(max-width:720px){.stats{grid-template-columns:repeat(2,1fr);gap:22px 0}
+    .stat:nth-child(3){border-left:0}}
+  @media(max-width:430px){.stats{grid-template-columns:1fr}.stat{border-left:0;
+    border-top:1px solid var(--line);padding-top:20px}.stat:first-child{border-top:0}}
+
+  /* ---------- sections ---------- */
+  section{padding:clamp(46px,7vw,78px) 0;border-bottom:1px solid var(--line)}
+  .kicker{display:flex;align-items:baseline;gap:14px;margin-bottom:26px}
+  .kicker .num{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--accent);
+    font-weight:600;letter-spacing:.08em}
+  h2{font-size:clamp(27px,3.7vw,37px);letter-spacing:-.01em;margin:0}
+  h2 .sub{display:block;font-family:"IBM Plex Mono",monospace;font-size:12.5px;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-top:12px}
+  h3{font-size:19px;margin:0 0 .3em;color:var(--ink);font-weight:600}
+
+  .two{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(28px,4vw,54px);align-items:start}
+  @media(max-width:820px){.two{grid-template-columns:1fr;gap:30px}}
+
+  /* pull card */
+  .pull{background:var(--raised);border:1px solid var(--line);border-radius:3px;
+    padding:24px 26px;box-shadow:var(--shadow)}
+  .pull.teal{border-left:3px solid var(--teal)}
+  .pull.accent{border-left:3px solid var(--accent)}
+  .pull h3{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:12px}
+  .pull p:last-child{margin-bottom:0}
+  .pull .big{font-family:"Fraunces",serif;font-size:19px;line-height:1.4;color:var(--ink)}
+
+  /* two-finding list inside a pull card */
+  .find{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;
+    padding:16px 0;border-top:1px solid var(--line)}
+  .find .f-n{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;
+    color:var(--surface);background:var(--accent);width:22px;height:22px;border-radius:50%;
+    display:grid;place-items:center;margin-top:3px}
+  .find p{margin:0;font-size:16px;line-height:1.45}
+  .find p + p{margin-top:6px;font-size:14.5px;color:var(--muted)}
+
+  /* aims */
+  .aims{display:grid;gap:2px;margin-top:8px;counter-reset:aim}
+  .aim{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;
+    padding:22px 4px;border-top:1px solid var(--line)}
+  .aim:first-child{border-top:0}
+  .aim .a-n{font-family:"Fraunces",serif;font-weight:600;font-size:15px;color:var(--surface);
+    background:var(--accent);width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+    margin-top:2px}
+  .aim h3{margin-bottom:.15em}
+  .aim p{margin:0;color:var(--muted);font-size:16.5px}
+  .aim .q{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--teal);font-weight:600}
+
+  /* organism table */
+  .tbl-scroll{overflow-x:auto;margin-top:6px;border:1px solid var(--line);border-radius:3px}
+  table{border-collapse:collapse;width:100%;font-size:15.5px;min-width:540px}
+  caption{caption-side:top;text-align:left;font-family:"IBM Plex Mono",monospace;font-size:12px;
+    color:var(--faint);padding:0 0 12px;letter-spacing:.03em}
+  th,td{text-align:left;padding:13px 16px;border-top:1px solid var(--line);vertical-align:top}
+  thead th{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--muted);font-weight:600;border-top:0;background:var(--surface)}
+  tbody tr:hover{background:var(--surface)}
+  .tier{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.04em;
+    padding:3px 9px;border-radius:100px;white-space:nowrap;display:inline-block}
+  .t-pri{color:var(--accent);background:var(--accent-wash)}
+  .t-sec{color:var(--teal);background:var(--teal-wash)}
+  .t-no{color:var(--muted);background:var(--surface);border:1px solid var(--line)}
+  .sp{font-style:italic}
+
+  /* data matrix */
+  .mx td,.mx th{text-align:center}
+  .mx td:first-child,.mx th:first-child{text-align:left;min-width:150px}
+  .mx td:last-child{text-align:left;color:var(--muted);font-size:14px;min-width:200px}
+  .yes{color:var(--teal);font-weight:600}
+  .no{color:var(--accent);font-weight:600}
+  .part{color:var(--ochre);font-weight:600}
+  .mark{font-family:"IBM Plex Mono",monospace;font-size:15px}
+
+  ul.clean{list-style:none;padding:0;margin:0;display:grid;gap:14px}
+  ul.clean li{display:grid;grid-template-columns:auto 1fr;gap:13px;color:var(--muted);font-size:16.5px}
+  ul.clean li::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent);
+    margin-top:.62em}
+  ul.clean li strong{color:var(--ink)}
+
+  /* calibration block */
+  .calib{margin-top:clamp(34px,4.5vw,52px);border-top:1px solid var(--line);padding-top:clamp(28px,3.5vw,40px)}
+  .calib h3{font-family:"Fraunces",serif;font-size:21px;margin-bottom:.35em}
+
+  /* integrity note */
+  .note{background:var(--accent-wash);border:1px solid var(--line);border-radius:3px;
+    padding:clamp(24px,3.5vw,36px)}
+  .note h2{color:var(--accent-ink)}
+  .note p{color:var(--ink)}
+  .note p:last-child{margin-bottom:0}
+
+  /* references */
+  .refs{font-size:14.5px;color:var(--muted)}
+  .refs ol{padding-left:1.4em;margin:0;display:grid;gap:11px}
+  .refs li{padding-left:6px;line-height:1.5}
+  .refs a{color:var(--accent-ink);word-break:break-word}
+
+  footer{padding:40px 0 60px;color:var(--faint);font-family:"IBM Plex Mono",monospace;font-size:12px;
+    line-height:1.7}
+  .rule{color:var(--accent)}
+
+  @media(prefers-reduced-motion:no-preference){
+    .fade{animation:fade .7s ease both}
+    @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  }
+</style>
+
+</head>
+<body>
+<header class="hero">
+  <div class="wrap hero-inner">
+    <p class="eyebrow">Study proposal &middot; Kwon Lab &middot; strain-resolved metagenomics</p>
+    <h1>The Rectovaginal Route</h1>
+    <p class="thesis">Do gut bacteria seed the vagina during pregnancy &mdash; as the <em>same strain</em> &mdash; and does limited access to water, hygiene, and care make it more likely?</p>
+    <div class="provenance">
+      <span>motivated by a lived clinical case</span>
+      <span>grounded in established GBS biology</span>
+      <span>analysed with the strainshare pipeline</span>
+    </div>
+
+    <figure class="diagram">
+      <svg viewBox="0 0 1000 190" role="img" aria-label="Transmission hypothesis: a gut/rectal reservoir seeds the vagina as the same strain, contributing to infection and preterm risk, modulated by hygiene and healthcare access." width="100%" style="max-width:1000px;height:auto">
+        <!-- connectors -->
+        <defs>
+          <marker id="arw" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="var(--accent)"></path>
+          </marker>
+        </defs>
+        <line x1="196" y1="82" x2="330" y2="82" stroke="var(--accent)" stroke-width="1.4" marker-end="url(#arw)"></line>
+        <line x1="470" y1="82" x2="604" y2="82" stroke="var(--accent)" stroke-width="1.4" marker-end="url(#arw)"></line>
+        <line x1="744" y1="82" x2="812" y2="82" stroke="var(--accent)" stroke-width="1.4" marker-end="url(#arw)"></line>
+        <!-- node 1: reservoir -->
+        <rect x="18" y="44" width="178" height="76" rx="4" fill="var(--teal-wash)" stroke="var(--teal)" stroke-width="1"></rect>
+        <text class="node-t" x="107" y="78" text-anchor="middle">Gut / rectal</text>
+        <text class="node-t" x="107" y="98" text-anchor="middle">reservoir</text>
+        <text class="lab" x="107" y="136" text-anchor="middle">GBS &middot; E. coli &middot; BV taxa</text>
+        <!-- gate: strain test -->
+        <rect x="330" y="50" width="140" height="64" rx="4" fill="var(--surface)" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3 3"></rect>
+        <text class="gate-t" x="400" y="78" text-anchor="middle">same strain?</text>
+        <text class="gate-t" x="400" y="96" text-anchor="middle">popANI &#8805; 0.999</text>
+        <text class="lab" x="400" y="136" text-anchor="middle">within a woman, over time</text>
+        <!-- node 2: vaginal -->
+        <rect x="604" y="44" width="140" height="76" rx="4" fill="var(--accent-wash)" stroke="var(--accent)" stroke-width="1"></rect>
+        <text class="node-t" x="674" y="78" text-anchor="middle">Vaginal</text>
+        <text class="node-t" x="674" y="98" text-anchor="middle">colonisation</text>
+        <!-- node 3: outcome -->
+        <rect x="812" y="44" width="170" height="76" rx="4" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="1"></rect>
+        <text class="node-t" x="897" y="78" text-anchor="middle">Infection /</text>
+        <text class="node-t" x="897" y="98" text-anchor="middle">preterm risk</text>
+        <!-- modifier -->
+        <text class="lab" x="400" y="28" text-anchor="middle" style="fill:var(--ochre)">&#8595; modified by water, sanitation, hygiene &amp; antenatal-care access</text>
+      </svg>
+      <figcaption>The hypothesis, and the one test that settles it &mdash; strain identity across sites within the same woman.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<div class="band">
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><div class="n">24.1<span style="font-size:.6em">%</span></div><div class="k">maternal GBS colonisation across LMIC South-Asian &amp; African cohorts (Mali 41%, Ethiopia 12%)</div></div>
+      <div class="stat"><div class="n">19.7<span style="font-size:.6em">M</span></div><div class="k">pregnant women with rectovaginal GBS in 2020, worldwide</div></div>
+      <div class="stat"><div class="n">&#8804;50<span style="font-size:.6em">%</span></div><div class="k">vertical transmission from a colonised mother &mdash; the main driver of early-onset neonatal disease</div></div>
+      <div class="stat"><div class="n">~36<span style="font-size:.55em">wk</span></div><div class="k">gestation at which a <em>recto-vaginal</em> GBS swab is already standard of care</div></div>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <section>
+    <div class="kicker"><span class="num">01</span><h2>The premise is established<span class="sub">for pathogens, not commensals</span></h2></div>
+    <div class="two">
+      <div class="col">
+        <p>That bacteria travel from the gut to the vagina is not a fringe idea &mdash; it is mainstream obstetrics. The gastrointestinal tract is the recognised reservoir for vaginal <strong>Group B <span class="sp">Streptococcus</span></strong> (<span class="sp">Streptococcus agalactiae</span>); GBS lives in the lower bowel and seeds the vagina. That is precisely <em>why</em> every pregnant person receives a <strong>recto-vaginal</strong> swab near term and antibiotics in labour if positive.</p>
+        <p><strong><span class="sp">E. coli</span></strong> and other Enterobacteriaceae follow the same rectum&#8594;vagina/urethra path &mdash; a major driver of UTIs and neonatal sepsis. Several <strong>BV-associated taxa</strong> (<span class="sp">Gardnerella</span>, <span class="sp">Prevotella</span>, <span class="sp">Sneathia</span>, <span class="sp">Fannyhessea</span>) are implicated in cross-site movement too. The route is real; the open question is which organisms travel as the <em>same strain</em>, and in whom.</p>
+      </div>
+      <aside class="pull teal">
+        <h3>Why it matters in pregnancy</h3>
+        <p class="big">A colonised mother, an under-screened setting, and a vertical-transmission rate up to 50% turn a gut organism into a neonatal risk.</p>
+        <p style="margin-top:14px;font-size:15px;color:var(--muted)">Bacterial vaginosis &mdash; the dysbiotic state these taxa create &mdash; raises the risk of preterm birth and low birthweight, outcomes that fall hardest on low- and middle-income settings.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section>
+    <div class="kicker"><span class="num">02</span><h2>The gap is strain-level proof<span class="sub">what has, and has not, been shown</span></h2></div>
+    <div class="two">
+      <div class="col">
+        <p>Rectovaginal colonisation is well documented by <em>culture and PCR</em>, and pathogen <em>isolate</em> genomes exist &mdash; including from low-resource cohorts. What is missing is the decisive observation: <strong>the same strain, demonstrated moving rectum&#8594;vagina within one woman across pregnancy</strong>, by strain-resolved metagenomics, and linked to infection and to hygiene and access.</p>
+        <p>The one directly relevant study is sobering in the right way. Goltsman <span class="mono" style="font-size:14px">et&nbsp;al.</span> (2018) found that a pregnant woman&rsquo;s gut carried the <em>same Lactobacillus species</em> that dominated her vagina &mdash; but the within-host strains were <strong>divergent</strong>, not identical. No study has yet confirmed an <em>identical</em> gut&#8596;vaginal strain. That is the gap this proposal fills &mdash; honestly.</p>
+        <p>Our own pilot sharpens it further, and in a way that changes the design. Three women, deep paired rectal + vaginal shotgun, a 33-genome reference containing both the vaginal community and the transmissible pathogens, produced <strong>two different kinds of negative</strong> &mdash; and only one of them is a true absence. Telling them apart is what sets the target list and the sequencing depth below.</p>
+      </div>
+      <aside class="pull accent">
+        <h3>Our own pilot &mdash; two negatives, not one</h3>
+        <div class="find">
+          <div class="f-n">1</div>
+          <div>
+            <p><strong>A true absence.</strong> <span class="sp">Gardnerella</span> reached <span class="mono">185&times;</span> vaginally at <span class="mono">0.96</span> breadth &mdash; and <span class="mono">0&times;</span> in the rectum. Not one read, in any of the three women, for <span class="sp">Gardnerella</span> or <span class="sp">Lactobacillus</span>.</p>
+            <p>The commensals have no gut reservoir. Sequencing deeper will not find one.</p>
+          </div>
+        </div>
+        <div class="find">
+          <div class="f-n">2</div>
+          <div>
+            <p><strong>A sub-threshold signal.</strong> The BV-associated taxa <em>were</em> at both sites in <span class="mono">3/3</span> women &mdash; <span class="sp">P. bivia</span> rectally at <span class="mono">6.7&ndash;11.4&times;</span>, <span class="sp">P. amnii</span> rectum <span class="mono">3.8&times;</span> &#8594; vagina <span class="mono">198&times;</span>, <span class="sp">P. disiens</span> rectum <span class="mono">19.5&times;</span> &#8596; vagina <span class="mono">6.5&times;</span>.</p>
+            <p>But overlapping breadth peaked near <span class="mono">0.15</span>, under the <span class="mono">0.5</span> floor &mdash; so not one within-woman cross-site pair yielded a comparable genome. Co-detected, uncallable.</p>
+          </div>
+        </div>
+        <p style="margin-top:16px;font-size:15px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px">The commensals are <strong>out</strong> &mdash; including them only dilutes the signal. The BV taxa are <strong>in</strong>, and the pilot says exactly why the study was never going to call them: <strong>depth, not absence</strong>.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section>
+    <div class="kicker"><span class="num">03</span><h2>Hypothesis &amp; specific aims<span class="sub">a genuine sequence &mdash; each aim needs the one before it</span></h2></div>
+    <p class="col" style="margin-bottom:8px"><strong>Hypothesis.</strong> In pregnancy, specific rectal bacteria (GBS, <span class="sp">E. coli</span>, BV-associated taxa) seed the vagina as the <em>same strain</em>, contributing to colonisation and infection; transfer is more frequent under limited hygiene and healthcare access.</p>
+    <div class="aims">
+      <div class="aim"><div class="a-n">1</div><div><p class="q">Does it happen?</p><h3>Detect within-woman shared strains</h3><p>Rectum&#8596;vagina strain identity by inStrain <span class="mono">popANI&#8201;&#8805;&#8201;0.999</span> on <span class="mono">&#8805;50%</span> breadth, contamination-controlled, focused on GBS / <span class="sp">E.&nbsp;coli</span> / BV taxa.</p></div></div>
+      <div class="aim"><div class="a-n">2</div><div><p class="q">Which way, which bugs?</p><h3>Infer direction and rank taxa</h3><p>Use <strong>longitudinal</strong> sampling to establish rectum-before-vagina timing, then rank organisms by transmission rate, directionality, and persistence.</p></div></div>
+      <div class="aim"><div class="a-n">3</div><div><p class="q">Does it cause disease?</p><h3>Link sharing to outcomes</h3><p>Associate cross-site strain sharing with vaginal infection and dysbiosis (BV, GBS status, symptomatic infection) and with preterm birth.</p></div></div>
+      <div class="aim"><div class="a-n">4</div><div><p class="q">Who is at risk, what helps?</p><h3>Test the access covariates</h3><p>Model transmission against <strong>water, sanitation, hygiene and antenatal-care</strong> access to find who is most at risk &mdash; and the actionable points for prevention.</p></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="kicker"><span class="num">04</span><h2>Design &amp; target organisms<span class="sub">longitudinal, paired, deep &mdash; and pointed at the right bugs</span></h2></div>
+    <div class="two">
+      <div>
+        <h3 style="font-family:'Fraunces',serif;font-size:20px;margin-bottom:.5em">How the study is built</h3>
+        <ul class="clean">
+          <li><strong>Population.</strong> Pregnant women in low-resource settings, with documented water/sanitation/hygiene and healthcare-access variation.</li>
+          <li><strong>Sampling.</strong> Paired rectal + vaginal swabs at each visit across pregnancy &mdash; longitudinal is what makes <em>direction</em> knowable.</li>
+          <li><strong>Depth.</strong> Deep shotgun to <span class="mono">&#8805;10&times;</span> breadth on candidate taxa &mdash; the empirical strain-call floor from our benchmarks, and the exact thing the pilot&rsquo;s BV co-detections fell short of.</li>
+          <li><strong>Controls.</strong> Per-plate negatives so whole-community contamination, which mimics sharing, can be flagged and removed.</li>
+          <li><strong>Reference.</strong> A broad vaginal + gut catalogue plus per-sample assembled genomes &mdash; reference breadth is the sensitivity lever.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="tbl-scroll">
+          <table>
+            <caption>Priority organisms &mdash; and what to ignore</caption>
+            <thead><tr><th>Tier</th><th>Organisms</th></tr></thead>
+            <tbody>
+              <tr><td><span class="tier t-pri">Primary</span></td><td>GBS (<span class="sp">S. agalactiae</span>), <span class="sp">E. coli</span> / Enterobacteriaceae &mdash; established transmitters, direct neonatal relevance</td></tr>
+              <tr><td><span class="tier t-sec">Secondary</span></td><td>BV-associated: <span class="sp">Gardnerella</span> spp., <span class="sp">Prevotella bivia / amnii / disiens</span>, <span class="sp">Sneathia</span>, <span class="sp">Fannyhessea</span> &mdash; co-detected at both sites in 3/3 pilot women, below the strain-call floor</td></tr>
+              <tr><td><span class="tier t-no">Not target</span></td><td><span class="sp">Lactobacillus</span> &amp; commensal <span class="sp">Gardnerella</span> &mdash; not a gut reservoir (0&times; rectally in our pilot); including them dilutes the signal</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:14.5px;color:var(--muted);margin-top:16px">Analysis runs through <strong>strainshare</strong>: shared-strain calls against a within- vs between-person null, a contamination discriminator, a generalist filter, and longitudinal direction inference.</p>
+      </div>
+    </div>
+
+    <div class="calib">
+      <h3>What &ldquo;same strain&rdquo; means, quantitatively</h3>
+      <p class="col" style="font-size:16.5px;color:var(--muted)">The <span class="mono">0.999</span> cutoff is not a convention borrowed from the literature &mdash; it was calibrated against known divergence. Reads simulated from three real genomes (<span class="sp">L. crispatus</span>, <span class="sp">L. iners</span>, <span class="sp">G. vaginalis</span>) across four mutation rates &times; three replicates gave <span class="mono">39</span> real inStrain comparisons at <span class="mono">20&times;</span>. popANI tracks <span class="mono">1&#8722;divergence</span> with SD&#8201;&lt;&#8201;<span class="mono">1e&#8722;4</span>, and <strong>all three species curves overlap</strong> &mdash; the resolution limit is species-agnostic.</p>
+
+      <figure class="diagram" style="margin-top:8px">
+        <svg viewBox="0 0 1000 152" role="img" aria-label="Calibration of the popANI 0.999 threshold against known divergence. Simulated divergence of 0.05 percent gives popANI 0.9995, called the same strain; 0.1 percent gives 0.9990, exactly at the threshold; 0.2 percent gives 0.9980 and 0.3 percent gives 0.9971, both called different strains. The resolution limit is about 0.1 percent divergence." width="100%" style="max-width:1000px;height:auto">
+          <!-- threshold label -->
+          <text class="gate-t" x="694" y="18" text-anchor="middle">popANI 0.999 threshold</text>
+          <!-- decision bands -->
+          <rect x="80" y="48" width="614" height="34" fill="var(--accent-wash)"></rect>
+          <rect x="694" y="48" width="246" height="34" fill="var(--teal-wash)"></rect>
+          <text class="lab" x="387" y="70" text-anchor="middle" style="fill:var(--accent)">CALLED DIFFERENT STRAIN</text>
+          <text class="lab" x="817" y="70" text-anchor="middle" style="fill:var(--teal)">CALLED SAME STRAIN</text>
+          <!-- axis -->
+          <line x1="80" y1="82" x2="940" y2="82" stroke="var(--line-strong)" stroke-width="1"></line>
+          <!-- threshold rule -->
+          <line x1="694" y1="26" x2="694" y2="94" stroke="var(--accent)" stroke-width="1.4" stroke-dasharray="3 3"></line>
+          <!-- points -->
+          <circle cx="227" cy="82" r="4.5" fill="var(--accent)"></circle>
+          <circle cx="449" cy="82" r="4.5" fill="var(--accent)"></circle>
+          <circle cx="694" cy="82" r="5.5" fill="var(--ochre)"></circle>
+          <circle cx="817" cy="82" r="4.5" fill="var(--teal)"></circle>
+          <circle cx="940" cy="82" r="4.5" fill="var(--teal)"></circle>
+          <!-- divergence labels -->
+          <text class="lab" x="227" y="104" text-anchor="middle">0.3% divergence</text>
+          <text class="lab" x="449" y="104" text-anchor="middle">0.2%</text>
+          <text class="lab" x="694" y="104" text-anchor="middle">0.1%</text>
+          <text class="lab" x="817" y="104" text-anchor="middle">0.05%</text>
+          <text class="lab" x="936" y="104" text-anchor="end">0% (clone)</text>
+          <!-- popANI values -->
+          <text class="val" x="227" y="124" text-anchor="middle">0.9971</text>
+          <text class="val" x="449" y="124" text-anchor="middle">0.9980</text>
+          <text class="val" x="694" y="124" text-anchor="middle">0.9990</text>
+          <text class="val" x="817" y="124" text-anchor="middle">0.9995</text>
+          <text class="val" x="936" y="124" text-anchor="end">1.0000</text>
+          <!-- knife edge note -->
+          <text class="lab" x="694" y="144" text-anchor="middle" style="fill:var(--ochre)">&#8593; resolution limit &mdash; the knife edge</text>
+        </svg>
+        <figcaption>39 real inStrain comparisons at 20&times;, three species, three replicates per point.</figcaption>
+      </figure>
+
+      <p class="col" style="margin-top:22px;font-size:16.5px;color:var(--muted)"><strong style="color:var(--ink)">So a &ldquo;shared strain&rdquo; in this study is a defined quantity</strong>, not a threshold assertion: two populations that have diverged by less than roughly <span class="mono">0.1%</span>. Below <span class="mono">0.05%</span> the call is unambiguous; at <span class="mono">0.1%</span> it is a knife edge; at <span class="mono">0.2%</span> and beyond the strains separate cleanly. Every transmission claim the study makes will carry that resolution with it.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="kicker"><span class="num">05</span><h2>The honest data landscape<span class="sub">verified against five requirements</span></h2></div>
+    <p class="col">A strain-level test needs all five at once: DNA shotgun, paired rectal + vaginal from the same women, pregnancy, a low-resource setting, and open access. We checked the leading candidates &mdash; none clears the bar, and that is the case for collecting the cohort.</p>
+    <div class="tbl-scroll">
+      <table class="mx">
+        <thead><tr><th>Dataset</th><th>DNA shotgun</th><th>rectal + vaginal</th><th>pregnancy</th><th>low-resource</th><th>open</th><th>Verdict</th></tr></thead>
+        <tbody>
+          <tr><td>PRJNA798597 <span style="color:var(--faint)">(S. Africa)</span></td><td class="mark no">&#10007;</td><td class="mark yes">&#10003;</td><td class="mark yes">&#10003;</td><td class="mark yes">&#10003;</td><td class="mark yes">&#10003;</td><td>RNA-Seq &mdash; right cohort, wrong molecule</td></tr>
+          <tr><td>MOMS-PI <span style="color:var(--faint)">(phs001523)</span></td><td class="mark yes">&#10003;</td><td class="mark part">~</td><td class="mark yes">&#10003;</td><td class="mark no">&#10007;</td><td class="mark no">&#10007;</td><td>Best design; shotgun is dbGaP-controlled &amp; looks vaginal-only</td></tr>
+          <tr><td>PRJNA826539 <span style="color:var(--faint)">(Fijian)</span></td><td class="mark yes">&#10003;</td><td class="mark yes">&#10003;</td><td class="mark part">?</td><td class="mark yes">&#10003;</td><td class="mark yes">&#10003;</td><td>Only open DNA rectal+vaginal set; the n=3 pilot above</td></tr>
+          <tr><td>HMP1 <span style="color:var(--faint)">(phs000228)</span></td><td class="mark yes">&#10003;</td><td class="mark part">~</td><td class="mark no">&#10007;</td><td class="mark no">&#10007;</td><td class="mark yes">&#10003;</td><td>Open baseline-mechanism test &mdash; 34 women, stool+vaginal, not pregnant</td></tr>
+          <tr><td>GBS isolate WGS <span style="color:var(--faint)">(Ethiopia&hellip;)</span></td><td class="mark yes">&#10003;</td><td class="mark no">&#10007;</td><td class="mark yes">&#10003;</td><td class="mark yes">&#10003;</td><td class="mark yes">&#10003;</td><td>Cultured isolates &mdash; strain <em>reference</em>, not in-situ transmission</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="col" style="margin-top:22px;font-size:16.5px;color:var(--muted)"><strong style="color:var(--ink)">Bottom line.</strong> No open dataset satisfies all five &mdash; the pieces are split across molecule, sites, population, and access. That is not a dead end; it is the justification for a <strong>prospectively collected</strong> low-resource pregnancy cohort, or a <strong>dbGaP application</strong> to MOMS-PI after confirming it holds paired rectal WGS.</p>
+  </section>
+
+  <section>
+    <div class="kicker"><span class="num">06</span><h2>What it changes<span class="sub">evidence for clinicians and policy &mdash; not prescriptions</span></h2></div>
+    <div class="two">
+      <div class="col">
+        <p>The outputs feed levers that already exist. GBS <strong>intrapartum antibiotic prophylaxis</strong> is standard of care &mdash; this study says <em>which</em> women and <em>which</em> strains matter most, and whether screening should reach earlier or into the rectal reservoir directly. <strong>WASH interventions</strong> &mdash; clean water, sanitation &mdash; become testable structural preventions where transfer is highest. Microbiome-directed approaches such as <span class="sp">Lactobacillus</span> live biotherapeutics remain research-stage, and the Kwon Lab&rsquo;s own domain.</p>
+      </div>
+      <aside class="pull teal">
+        <h3>The deliverable</h3>
+        <p class="big">A ranked, contamination-controlled list of bacteria that demonstrably move rectum&#8594;vagina in pregnancy &mdash; with direction, persistence, outcome links, and the risk factors that govern them.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section style="border-bottom:0">
+    <div class="note">
+      <div class="kicker" style="margin-bottom:18px"><span class="num" style="color:var(--accent)">&#167;</span><h2>On honesty</h2></div>
+      <p style="font-size:19px;line-height:1.5">This proposal exists because the phenomenon it studies happened to a real person. That experience is <strong>proof at the clinical level</strong> &mdash; the level that mattered for her health. It does not need sequencing data to be true.</p>
+      <p style="color:var(--muted)">What the study can do is generate the <em>strain-level, population-scale</em> evidence that turns one lived case into a defensible, fundable finding. It will report what the data show &mdash; positive or negative &mdash; and it will not relabel a commensal result, or a trace at one site, as proof of pathogen transmission. A clean negative is itself worth publishing: it says the reservoir is elsewhere, or the depth insufficient, and points to the next study. The pilot above is exactly that distinction drawn on our own data &mdash; one true absence, one sub-threshold signal, reported as two different things. All treatment decisions belong to a clinician; this work produces the evidence, not the prescription.</p>
+      <p style="color:var(--muted);margin-bottom:0"><strong>Limitations held in view:</strong> confounding by shared environment and sexual activity; the need for deep sequencing and a comprehensive reference; and the ethics of working with vulnerable, low-resource, pregnant participants &mdash; IRB approval, informed consent, and clinician-led management of anything found.</p>
+    </div>
+  </section>
+
+  <section class="refs" style="border-bottom:0;padding-top:0">
+    <div class="kicker"><span class="num">&mdash;</span><h2 style="font-size:22px">References &amp; sources</h2></div>
+    <ol>
+      <li>Global &amp; LMIC rectovaginal GBS burden (19.7M in 2020; regional estimates): <span class="sp">Lancet Glob Health</span> 2022. <a href="https://www.sciencedirect.com/science/article/pii/S2214109X22000936">sciencedirect.com/&hellip;/S2214109X22000936</a></li>
+      <li>Maternal GBS colonisation 24.1% across LMIC South-Asian &amp; African cohorts (Mali 41.1%, Ethiopia 11.6%): <span class="sp">Lancet Microbe</span> 2024. <a href="https://www.thelancet.com/journals/lanmic/article/PIIS2666-5247(24)00129-0/fulltext">thelancet.com/&hellip;/PIIS2666-5247(24)00129-0</a></li>
+      <li>Gut carries the same <span class="sp">Lactobacillus</span> species as the vagina but as <em>divergent</em> strains (pregnancy, strain-resolved): Goltsman et al., <span class="sp">Genome Research</span> 2018. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6169887/">pmc.ncbi.nlm.nih.gov/articles/PMC6169887</a></li>
+      <li>Vaginal microbiome in pregnancy &amp; preterm birth &mdash; mechanisms, disparities, therapeutics: <span class="sp">npj Biofilms and Microbiomes</span> 2026. <a href="https://www.nature.com/articles/s41522-026-00945-5">nature.com/articles/s41522-026-00945-5</a></li>
+      <li>Bacterial vaginosis prevalence in antenatal care across LMICs, 2000&ndash;2020 (meta-analysis): <span class="sp">Reprod. Female Child Health</span> 2024. <a href="https://doi.org/10.1002/rfc2.99">doi.org/10.1002/rfc2.99</a></li>
+      <li>Maternal rectovaginal GBS and stillbirth risk (meta-analysis): 2025. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11737329/">pmc.ncbi.nlm.nih.gov/articles/PMC11737329</a></li>
+      <li>Pilot data, threshold calibration and the analysis framework: <span class="sp">strainshare</span> v0.1.0, Zenodo. <a href="https://doi.org/10.5281/zenodo.22275588">doi.org/10.5281/zenodo.22275588</a></li>
+    </ol>
+    <p style="margin-top:20px;font-size:13.5px;color:var(--faint)">Established facts are cited; the strain-level within-woman rectum&#8594;vagina transmission this study proposes to demonstrate is, by design, <em>not yet</em> established &mdash; that is the point of the work.</p>
+  </section>
+
+  <footer>
+    THE RECTOVAGINAL ROUTE <span class="rule">/</span> study proposal, Kwon Lab <span class="rule">/</span> engine: strainshare, DOI 10.5281/zenodo.22275588 <span class="rule">/</span> a proposal, not a result
+  </footer>
+</main>
+
+</body>
+</html>
