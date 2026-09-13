@@ -160,7 +160,14 @@ egress-free) rather than downloaded. Paired sample map: `~/hmp/paired_women2.tsv
 - **Depth**: candidate taxa are often low-abundance at one site → need deep sequencing (or targeted
   enrichment/culture for GBS/*E. coli*).
 - **Confounding**: sexual activity and shared environment can mimic rectal seeding; longitudinal design +
-  the between-person null + contamination checks mitigate this.
+  the between-person null + contamination checks mitigate this. **This is not hypothetical.** In the
+  Fijian pilot, two *unrelated* women share a gut *P. vulgatus* strain at popANI 0.99971 / 77% breadth —
+  and it survives both controls: the taxon is not a generalist (6/6 unrelated US women in Goltsman call
+  *different*, popANI 0.977–0.998) and it is not contamination (only 1 of 2 comparable genomes is shared,
+  the other at *higher* breadth is not; the two gut communities are markedly distinct). Community-acquired
+  strains therefore circulate between women in this kind of setting, so the between-person null **must be
+  run within the study cohort** — a within-woman cross-site call is only transmission if that strain is
+  not already circulating locally. See [`fijian-pilot-findings.md`](./fijian-pilot-findings.md).
 - **Ethics**: IRB approval, informed consent, and clinician-led management of any infection found;
   particular care with vulnerable, low-resource participants.
 

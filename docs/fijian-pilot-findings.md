@@ -76,20 +76,59 @@ below 0.999). **One is not**, and it matters:
 | *P. bivia* | 57R ↔ 98R | 0.99784 | **0.452** | **no call** — under the floor |
 | ***P. vulgatus*** | **107R ↔ 57R** | **0.99971** | **0.768** | **SHARED — between unrelated women** |
 
-**The *P. vulgatus* row is a generalist strain, not a pipeline error.** Two women who have never met
-carry gut *P. vulgatus* populations that are identical by the same criterion the study uses to call
-transmission — at high breadth, so it cannot be dismissed as noise. This is precisely the failure mode
-the **M5 generalist filter** (`09_generalist_filter.py`) exists to catch: had a within-woman
-rectum↔vagina *P. vulgatus* call appeared, it would have been indistinguishable from transmission
-without this control.
+Two women in the same cohort carry gut *P. vulgatus* populations that are identical by the exact
+criterion the study uses to call transmission, at 77% breadth. There are three ways that happens, and
+they have very different consequences. We tested all three.
 
-Two consequences:
+**Explanation 1 — *P. vulgatus* is a cosmopolitan generalist** (near-identical strains in everyone, so
+the threshold is simply too loose for this taxon). **Rejected.** Run on the Goltsman cohort
+(PRJNA288562), four unrelated US women with no shared environment, all six between-subject gut↔gut
+pairs call *different* at good breadth:
 
-- The between-person null is **not optional**. Running it on this cohort empirically identified a taxon
-  whose within-woman "sharing" would have been uninterpretable.
-- **Generalist-prone taxa must be flagged before any transmission claim.** *P. vulgatus* is a gut
-  commensal with low strain diversity across hosts; the same caution applies to any organism whose
-  between-person popANI distribution crowds the threshold.
+| pair | popANI | `percent_compared` | call |
+|---|--:|--:|---|
+| M4 × P2 | 0.99835 | 0.788 | different |
+| P2 × T7 | 0.99750 | 0.753 | different |
+| M4 × T7 | 0.99597 | 0.725 | different |
+| M4 × T18 | 0.98715 | 0.528 | different |
+| P2 × T18 | 0.97939 | 0.539 | different |
+| T18 × T7 | 0.97676 | 0.504 | different |
+
+*P. vulgatus* strains are cleanly resolvable between unrelated hosts. The taxon is **not** a generalist,
+and the Fijian pair is a genuine outlier against this baseline — not a threshold artifact.
+
+**Explanation 2 — cross-sample contamination.** **Rejected.** Contamination transfers whole communities,
+so it would make *multiple* genomes identical and the two communities converge. Neither holds:
+
+- Of the **two** comparable genomes in this pair, only *P. vulgatus* is identical. *P. disiens* — compared
+  at **higher** breadth (0.838 vs 0.768) — is clearly different at popANI 0.99330.
+- The gut communities differ markedly. 57R carries *E. coli* (13.0×), *F. prausnitzii*, *B. fragilis*,
+  *Blautia wexlerae*, *Roseburia intestinalis* and two *Bifidobacterium* spp. that are **absent** from
+  107R; 107R carries *Sneathia vaginalis*, absent from 57R.
+
+**Explanation 3 — the two women genuinely share this strain.** **Supported by elimination.** One specific
+strain is shared against clearly distinct community backgrounds, while a co-present taxon at higher
+breadth is not shared. That is the signature of a real acquisition event — shared household, water
+source, or community contact — rather than an assay artifact.
+
+### Why this matters more than a generalist would have
+
+A generalist taxon is a nuisance you filter once. **Between-woman strain sharing in a community is a
+first-order confounder for this study's entire design** — and simultaneously a form of evidence for its
+premise. The proposal targets low-resource settings precisely because environmental transmission is
+expected to be higher there; this is a direct, if n=1, observation of it happening.
+
+Consequences:
+
+- **The between-person null is not optional**, and must be run *within cohort*, not borrowed from a
+  reference population. The US baseline above would have been useless for interpreting the Fijian pair
+  had we not also had the Fijian between-woman comparisons.
+- **Cross-site sharing within a woman cannot be attributed to rectovaginal transfer** until the same
+  strain is shown *not* to be circulating between women in her community. In a village cohort, a strain
+  shared rectum↔vagina may have entered both sites independently from a shared source.
+- The M5 generalist filter (`09_generalist_filter.py`) still fires correctly here — but what it flagged
+  is **community sharing, not taxon promiscuity**. The flag's interpretation is cohort-dependent, and
+  the docs should say so.
 
 The *P. bivia* row is the opposite control working correctly: a popANI that would otherwise read as
 "close" is withheld because only 45% of the genome was compared.
@@ -105,10 +144,12 @@ The *P. bivia* row is the opposite control working correctly: a popANI that woul
    resolution of the assay.*
 4. ***E. coli* remains rectum-only** in all three women (57R 13.0×, 98R 7.0×, absent from every vagina),
    so this cohort cannot speak to the primary pathogen hypothesis either way.
-5. **The generalist filter is load-bearing, not a formality.** Even at n=3 the between-person null
-   surfaced a confident cross-host shared strain (*P. vulgatus*, popANI 0.99971). Every transmission
-   claim in the main study must be reported alongside its between-person distribution for the same
-   taxon.
+5. **Between-woman sharing is real and must be controlled within cohort.** The between-person null
+   surfaced a confident cross-host shared strain (*P. vulgatus*, popANI 0.99971) that survives both
+   the generalist test (6/6 unrelated US women call different) and the contamination test (only 1 of 2
+   comparable genomes shared; communities distinct). Every within-woman transmission claim in the main
+   study must be reported alongside the between-woman distribution **for that taxon in that cohort** —
+   otherwise a community-acquired strain is indistinguishable from rectovaginal transfer.
 
 ## Reproducing
 
@@ -118,6 +159,10 @@ column -t example/fijian/genome_coverage.tsv
 
 # the 15 compare rows — note every pair is between-woman, same-site
 column -t example/fijian/genomeWide_compare.tsv
+
+# the cross-cohort generalist test (6 between-subject gut<->gut pairs, Goltsman)
+column -t example/fijian/goltsman_pvulgatus_between.tsv
+python scripts/dev/_pvulgatus_between.py        # regenerate; needs the Goltsman profiles
 ```
 
 Coverage rows are filtered to >0.5× from each profile's `*_genome_info.tsv`. The absence claims in
