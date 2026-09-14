@@ -25,8 +25,17 @@ and grounded in established GBS biology.*
   *Gardnerella* genomospecies). In our own strain-level pilot (3 women, deep rectal+vaginal, 33-genome
   reference), these were deeply covered vaginally (*G. vaginalis* **185.0×** at 0.955 breadth; *L. iners*
   44.9× at 0.959) yet returned **zero rows at any coverage in every rectal profile** — a *true absence*,
-  not a detection limit. Sequencing deeper will not find a reservoir.
-  **So the transmission question must target pathogens/opportunists, not commensals.**
+  not a detection limit. Sequencing deeper will not find a reservoir *in those women*.
+- **…but that exclusion is NOT universal — corrected 2026-09-14.** In the Goltsman cohort, subject
+  **T18 carries *L. iners* in her gut at all 10 timepoints across ~6 months**, and it is the **same
+  strain** as her vaginal population (popANI 0.999935 on 307,794 bases, 20 population SNPs; replicated
+  at an independent timepoint). A matched-breadth negative control — her gut vs an *unrelated* woman's
+  vagina at 302,916 bases — gives popANI 0.992127 with **2,385** SNPs, so the call is not a breadth
+  artifact. Gut *Lactobacillus* carriage is therefore **uncommon but real** (absent in 3/3 Fijian and
+  3/4 Goltsman women, present in T18), and it is at low abundance (0.05–3.18×). Details:
+  [`goltsman-crosssite-sharing.md`](./goltsman-crosssite-sharing.md).
+  **So the transmission question should prioritise pathogens/opportunists — but must not exclude the
+  commensals outright, since T18 is the only positive cross-site sharing signal found so far.**
 - **What IS co-detected, but not yet callable:** in those same 3 women, the **BV-associated taxa are
   present at *both* sites** — *P. bivia* rectally at 6.7–11.4× in **3/3**, *P. amnii* rectum 3.8× ↔
   vagina 197.7×, *P. disiens* rectum 19.5× ↔ vagina 6.5×, *Sneathia vaginalis* rectum 2.0× ↔ vagina
@@ -91,7 +100,7 @@ under limited hygiene/healthcare access.
 | **Primary** | GBS (*S. agalactiae*), *E. coli* / Enterobacteriaceae | Established rectovaginal transmitters; direct neonatal/maternal disease relevance |
 | **Secondary** | BV-associated: *Gardnerella* spp., *Prevotella bivia/amnii/disiens*, *Sneathia*, *Fannyhessea*, *Atopobium* | Cause vaginal dysbiosis/infection; **co-detected at both sites in 3/3 pilot women but below the strain-call floor** (§1) — the highest-value targets to power for |
 | **Also** | *Candida*, enterococci | Clinically relevant cross-site colonizers |
-| **Not the target** | *Lactobacillus*, vaginal commensal *Gardnerella* | Not a gut reservoir — **0× rectally at 185× vaginal coverage** in our pilot; including them dilutes the signal |
+| **Low prior, do not exclude** | *Lactobacillus*, vaginal commensal *Gardnerella* | **Revised 2026-09-14.** Absent from the gut in 3/3 Fijian women (0× rectally at 185× vaginal) and 3/4 Goltsman women — but T18 carries *L. iners* in her gut across 10 timepoints as the **same strain** as her vagina ([details](./goltsman-crosssite-sharing.md)). Uncommon but real, and at 0.05–3.18× it needs depth. Deprioritise; do not drop |
 
 ## 6. Analysis plan (strainshare pipeline)
 
