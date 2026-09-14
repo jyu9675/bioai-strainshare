@@ -104,8 +104,9 @@ def main():
                 color="#1d5c32", va="bottom", ha="right",
                 bbox=dict(boxstyle="round,pad=0.4", facecolor="white",
                           edgecolor="#2a7d46", alpha=0.9, lw=0.9))
-    ax.annotate(f"popANI ≥ {POPANI}  (same-strain threshold)", xy=(0.22, POPANI),
-                fontsize=8, color="#333", va="top", ha="center")
+    # the dashed line needs no inline label: the artifact box names the threshold and the
+    # y-axis shows it. An inline annotation collides with the artifact band, which is dense
+    # across the whole x-range precisely because that is the finding.
     ax.annotate(f"breadth floor  {BREADTH:.0%} →", xy=(BREADTH * 0.94, 0.5),
                 xycoords=("data", "axes fraction"), fontsize=8, color="#333",
                 va="center", ha="right")
