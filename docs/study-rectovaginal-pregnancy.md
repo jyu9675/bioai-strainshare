@@ -8,6 +8,10 @@ water, hygiene, and healthcare increases that risk.
 within-vs-between-person null, longitudinal direction inference). Motivated by a lived clinical case
 and grounded in established GBS biology.*
 
+> **Shareable one-page brief:** a designed HTML version of this proposal is at
+> [`rectovaginal-route.html`](rectovaginal-route.html) — open it in a browser (or serve the `docs/`
+> folder) for the lab / a committee. This Markdown file remains the canonical, editable source.
+
 ---
 
 ## 1. Background & significance
