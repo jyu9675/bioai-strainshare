@@ -255,6 +255,46 @@
     </div>
   </section>
 
+  <style>
+  .converge{padding:0;background:var(--surface);border:1px solid var(--line);border-radius:4px;box-shadow:var(--shadow)}
+  .converge .inner{padding:clamp(34px,4.5vw,54px) clamp(22px,3.5vw,46px)}
+  .converge .head{max-width:640px;margin:0 auto;text-align:center}
+  .chain{max-width:760px;margin:36px auto 0;position:relative}
+  .chain::before{content:"";position:absolute;left:19px;top:10px;bottom:44px;width:2px;
+    background:linear-gradient(var(--teal),var(--accent));border-radius:2px}
+  .rung{display:grid;grid-template-columns:40px 1fr;gap:22px;align-items:start;padding:0 0 26px;position:relative}
+  .rung:last-child{padding-bottom:0}
+  .rung .dot{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+    font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:14px;
+    background:var(--teal-wash);color:var(--teal);border:2px solid var(--teal);z-index:1}
+  .rung .claim{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--teal);font-weight:600;margin:0 0 5px}
+  .rung .ev{margin:0;font-size:16.5px;color:var(--ink);line-height:1.46}
+  .rung .ev b{color:var(--accent);font-weight:600;font-variant-numeric:tabular-nums}
+  .capstone .dot{background:var(--accent-wash);color:var(--accent);border:2px dashed var(--accent);font-size:17px}
+  .capstone .claim{color:var(--accent)}
+  .capstone .ev{font-family:"Fraunces",serif;font-size:18px;font-weight:500;line-height:1.4}
+  </style>
+
+  <section class="converge">
+    <div class="inner">
+      <div class="head">
+        <p class="eyebrow" style="color:var(--teal)">The evidence converges</p>
+        <h2 style="font-size:clamp(26px,3.6vw,37px);margin:12px 0 0">Six independent lines, one conclusion</h2>
+        <p class="lede" style="margin-top:14px">Each was found on its own, by different methods and different labs. They point the same way &mdash; rectum to vagina.</p>
+      </div>
+      <div class="chain">
+        <div class="rung"><div class="dot">1</div><div><p class="claim">The route</p><p class="ev">The recto-vaginal GBS swab is standard care; rectal carriage exceeds vaginal &mdash; the gut is the recognised source.</p></div></div>
+        <div class="rung"><div class="dot">2</div><div><p class="claim">Same strain, both sites</p><p class="ev"><b>18 of 19</b> women share an identical GBS genotype rectum&#8596;vagina; ~<b>85%</b> of <span class="sp">E.&nbsp;coli</span> vaginal/urinary isolates are one strain.</p></div></div>
+        <div class="rung"><div class="dot">3</div><div><p class="claim">Direction</p><p class="ev">Rectal GBS carriage is the <b>single strongest predictor</b> of vaginal colonisation &mdash; acquisition runs rectum&#8594;vagina.</p></div></div>
+        <div class="rung"><div class="dot">4</div><div><p class="claim">The reservoir, proven</p><p class="ev">Antibiotics crash vaginal GBS within hours, yet it survives in the bowel and <b>re-seeds the vagina</b> &mdash; a natural experiment.</p></div></div>
+        <div class="rung"><div class="dot">5</div><div><p class="claim">Actionable</p><p class="ev">An oral probiotic cut <b>both rectal and vaginal</b> GBS in a randomised trial &mdash; move the reservoir, move the vagina.</p></div></div>
+        <div class="rung"><div class="dot">6</div><div><p class="claim">Active in pregnancy</p><p class="ev">Gut and vaginal communities <b>converge</b> in late pregnancy &mdash; 30&ndash;60% of vaginal bacteria overlap with faecal.</p></div></div>
+        <div class="rung capstone"><div class="dot">&rarr;</div><div><p class="claim">What remains &mdash; this study</p><p class="ev">Watch the <em>same strain</em> move in situ &mdash; from metagenomes, across the whole community, over pregnancy, in a low-resource cohort &mdash; and tie it to infection and hygiene.</p></div></div>
+      </div>
+    </div>
+  </section>
+
   <section>
     <div class="kicker"><span class="num">02</span><h2>The gap is strain-level proof<span class="sub">what has, and has not, been shown</span></h2></div>
     <div class="two">
