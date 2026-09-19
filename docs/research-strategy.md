@@ -12,9 +12,13 @@ low-resource settings.* Companion to the [Specific Aims](specific-aims.md) and t
 **The clinical problem.** Vaginal colonization by enteric pathogens and the dysbiosis of bacterial
 vaginosis (BV) in pregnancy drive preterm birth, low birthweight, chorioamnionitis, and early-onset
 neonatal sepsis. These outcomes are concentrated in low- and middle-income countries (LMICs), where
-maternal rectovaginal Group B *Streptococcus* (GBS) colonization reaches **24.1%** (Mali 41%, Ethiopia
-12%), an estimated **19.7 million** women carried rectovaginal GBS in 2020, and screening plus
-intrapartum prophylaxis are least available.
+maternal rectovaginal Group B *Streptococcus* (GBS) colonization reaches **24.1%** across LMIC cohorts
+([Africa pooled **18%**, with **47%** vertical transmission](https://www.sciencedirect.com/science/article/pii/S1201971226003371)),
+an estimated **19.7 million** women carried rectovaginal GBS in 2020, and screening plus intrapartum
+prophylaxis are least available. Multidrug-resistant Enterobacteriaceae compound the risk: **ESBL
+*E. coli* rectal carriage in pregnant women reaches ~18.5%** in low-income settings
+([e.g., Madagascar](https://journals.asm.org/doi/full/10.1128/aac.00029-15)) — a maternal reservoir that
+seeds neonatal sepsis where its burden is highest.
 
 **The reservoir and the route are established — but only cross-sectionally.** Six independent lines
 converge on the gut/rectum seeding the vagina for the pathogens: (i) the recto-vaginal GBS swab is
@@ -35,10 +39,13 @@ right lever is deeper/earlier screening, WASH investment, or microbiome-directed
 **Hygiene plausibly governs the transfer (Aim 4 rationale).** In a cluster-randomized cohort, water
 source, latrine type, and rainfall were associated with detection of *enteric* bacteria in the vaginal
 microbiome, and BV is consistently elevated where WASH is poor — direct, if preliminary, support that
-limited hygiene increases gut→vaginal transfer. Disease risk is also **clone-specific**: GBS **CC17/ST-17**
-(HvgA+) is over-represented in neonatal invasive disease (~23% of infection vs ~2% of colonizing isolates),
-and *E. coli* **ST131** is a pandemic gut-reservoir uropathogen and persistent gut-and-vaginal colonizer —
-so the analysis will type shared strains to clonal-complex/ST level, not species alone.
+limited hygiene increases gut→vaginal transfer. Disease risk is also **clone-specific**: GBS
+**CC17/ST-17** (serotype III, HvgA+/rib, blood–brain-barrier-tropic) is over-represented in neonatal
+invasive disease (~23% of infection vs ~2% of colonizing isolates), and *E. coli* **ST131** (a pandemic
+gut-reservoir uropathogen; ~30% of maternal-neonatal ESBL isolates, with **ST1193** emerging) is a
+persistent gut-and-vaginal colonizer. [Multi-country work already documents vaginal GBS and *E. coli*
+carriage in resource-poor settings](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4727807/) — so the
+analysis will type shared strains to clonal-complex/ST level, not species alone.
 
 ## B. Innovation
 
