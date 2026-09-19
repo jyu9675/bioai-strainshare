@@ -13,6 +13,9 @@ and grounded in established GBS biology.*
 > - [Research Strategy](research-strategy.md) — full approach: sampling, wet-lab, bioinformatics, statistics, timeline, pitfalls
 > - [Budget & timeline](budget-timeline.md) — ~350-woman cohort planning sketch
 > - [MOMS-PI dbGaP scoping](momspi-dbgap-scoping.md) — the concrete data-access request
+> - [Data Management & Sharing Plan](data-management-sharing-plan.md) — NIH 2023 six-element DMSP
+> - [Cover letter & significance](cover-letter-and-significance.md) — templates + funder-fit notes
+> - [Letters of support](letters-of-support.md) — partner targets + template
 > - [Designed HTML brief](rectovaginal-route.html) — shareable one-page version (public via GitHub Pages)
 >
 > This Markdown file remains the canonical, editable source.
