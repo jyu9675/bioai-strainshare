@@ -32,6 +32,14 @@ water/sanitation/hygiene (WASH) and antenatal-care access. This gap is **decisio
 right lever is deeper/earlier screening, WASH investment, or microbiome-directed prevention depends on
 *which* organisms move, *when* in gestation, and *in whom*.
 
+**Hygiene plausibly governs the transfer (Aim 4 rationale).** In a cluster-randomized cohort, water
+source, latrine type, and rainfall were associated with detection of *enteric* bacteria in the vaginal
+microbiome, and BV is consistently elevated where WASH is poor — direct, if preliminary, support that
+limited hygiene increases gut→vaginal transfer. Disease risk is also **clone-specific**: GBS **CC17/ST-17**
+(HvgA+) is over-represented in neonatal invasive disease (~23% of infection vs ~2% of colonizing isolates),
+and *E. coli* **ST131** is a pandemic gut-reservoir uropathogen and persistent gut-and-vaginal colonizer —
+so the analysis will type shared strains to clonal-complex/ST level, not species alone.
+
 ## B. Innovation
 
 - **First in-situ, strain-resolved, longitudinal** demonstration of rectovaginal transmission in
@@ -63,6 +71,13 @@ right lever is deeper/earlier screening, WASH investment, or microbiome-directed
   rectal+vaginal + pregnancy + low-resource + open); HMP provides an open, non-pregnant baseline
   (34 women, stool+vaginal) and MOMS-PI is the controlled comparator (see
   [dbGaP scoping](momspi-dbgap-scoping.md)).
+- **Pathogen-targeted re-analysis (this work).** Re-scanning our Fijian (n=3) and HMP (7 complete women)
+  profiles specifically for GBS, *E. coli*, and BV *Prevotella* shows the primary pathogens are **not
+  vaginally colonized in these largely healthy/non-carrier women** — *E. coli* is gut/rectum-only where
+  present, GBS is undetected, and the only cross-site co-detections (BV-*Prevotella* in one woman) are
+  breadth-limited (not strain-callable). This is **not evidence against transmission**; it is a
+  *not-evaluable* result that quantifies why the study must enroll a **colonized** low-resource cohort
+  (vaginal GBS carriage ~24%, not ~0) rather than an unselected or healthy one.
 
 ### C.1 Overview & design
 
@@ -135,9 +150,10 @@ access covariates. Design mirrors, and can adapt onto, the lab's in-hand 382 pai
   report the transmission proportion. *Pitfall:* low abundance at one site → not-evaluable; *mitigation:*
   depth + enrichment + MAGs. *Expected:* a ranked, contamination-controlled shared-strain list.
 - **Aim 2 — direction & ranking.** From longitudinal timing, establish rectum-before-vagina acquisition;
-  rank taxa by transmission rate, directionality, persistence. *Pitfall:* both sites colonized at
-  baseline → direction unresolvable; *mitigation:* early first visit, ≥3 timepoints, report
-  `direction_unresolved` honestly.
+  rank taxa by transmission rate, directionality, persistence; **type GBS/*E. coli* shared strains to
+  clonal complex / ST** (e.g., CC17, ST131) so disease-relevant clones are distinguished. *Pitfall:* both
+  sites colonized at baseline → direction unresolvable; *mitigation:* early first visit, ≥3 timepoints,
+  report `direction_unresolved` honestly.
 - **Aim 3 — outcomes.** Associate sharing with infection/dysbiosis and preterm birth. *Pitfall:*
   outcome rarity → underpowered subgroups; *mitigation:* composite adverse-outcome endpoint, pre-specified.
 - **Aim 4 — risk factors.** Model sharing vs WASH/access. *Pitfall:* collinear socioeconomic variables;
