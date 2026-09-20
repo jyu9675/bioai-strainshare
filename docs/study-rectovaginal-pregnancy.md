@@ -13,6 +13,7 @@ and grounded in established GBS biology.*
 > - [Research Strategy](research-strategy.md) — full approach: sampling, wet-lab, bioinformatics, statistics, timeline, pitfalls
 > - [Budget & timeline](budget-timeline.md) — ~350-woman cohort planning sketch
 > - [MOMS-PI dbGaP scoping](momspi-dbgap-scoping.md) — the concrete data-access request
+> - [Fijian rectal data request](data-request-fijian-rectal.md) — near-term paired rectal↔vaginal shotgun (author request)
 > - [Data Management & Sharing Plan](data-management-sharing-plan.md) — NIH 2023 six-element DMSP
 > - [Cover letter & significance](cover-letter-and-significance.md) — templates + funder-fit notes
 > - [Letters of support](letters-of-support.md) — partner targets + template
@@ -141,6 +142,7 @@ access**. We checked the leading candidates against all five:
 | **PRJNA798597** (South Africa) | ❌ RNA-Seq | ✅ (R/V/O) | ✅ | ✅ | ✅ | **Not usable for strain** — metatranscriptomic (60 runs, `RNA-Seq`); right cohort, wrong molecule. Could show *active* taxa co-occurrence only. |
 | **MOMS-PI** (phs001523) | ✅ | ⚠️ WGS looks **vaginal-only** | ✅ | ❌ US | ❌ dbGaP | Best design, but shotgun is **controlled** (eRA Commons+IRB+DUA) and appears vaginal-swab-focused — **confirm rectal WGS before applying**. Open portion is 16S/cytokines only. |
 | **PRJNA826539** (Fijian, n=10) | ✅ | ✅ | ❓ not confirmed | ✅ Pacific | ✅ | **Only open DNA rectal+vaginal set**; source of our n=3 pilot (§1, [findings](./fijian-pilot-findings.md)). *E. coli* rectum-only and GBS undetected in the 3 women tested → no pathogen transmission shown. Its real value is the **two-negatives result**: commensals truly absent rectally, BV taxa co-detected but sub-threshold. |
+| **PRJNA982400 / PRJNA1153641** (Fijian, *C. trachomatis*) | ✅ WGS | ⚠️ V/C public, **rectal held by authors** | ❌ not pregnant | ✅ Pacific | ⚠️ V/C open; rectal unreleased | Paired vaginal+cervical+rectal shotgun from the **same women**; verified 2026-09 — **350 V/C runs public (PRJNA982400)**, **0 rectal runs released (PRJNA1153641)**. Baseline mechanism (not pregnancy). **Request the rectal data from the authors** — see [data-request-fijian-rectal.md](./data-request-fijian-rectal.md). |
 | **HMP1** (phs000228) | ✅ WGS | ⚠️ **stool**+vaginal (gut proxy, not rectal swab) | ❌ non-pregnant | ❌ US, well-resourced | ✅ **open on AWS S3** (no dbGaP) | **Best open *baseline-mechanism* test.** Verified 2026-09: **34 women** with paired stool + posterior-fornix shotgun WGS (51 vaginal / 48 stool samples; several women 2–6 visits → some longitudinal). ~342 GB (stool 332 GB) — run in-cloud (us-west-2). Tests gut↔vaginal strain sharing at *n=34*, but not the pregnancy/hygiene angle. |
 | **PRJDB10581** (pregnancy R/V/O pilot) | ⚠️ likely 16S | ✅ | ✅ | ❌ Japan | ✅ | verify amplicon vs shotgun; small pilot. |
 | **GBS isolate WGS** (Ethiopia/Nigeria/Sri Lanka) [2] | ✅ (isolates) | ❌ | ✅ | ✅ | ✅ | *Cultured isolates*, not paired metagenomes — valuable as **GBS strain reference/context**, not for in-situ transmission. |
