@@ -47,6 +47,16 @@ persistent gut-and-vaginal colonizer. [Multi-country work already documents vagi
 carriage in resource-poor settings](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4727807/) — so the
 analysis will type shared strains to clonal-complex/ST level, not species alone.
 
+**The route is physical, and the timing is now.** Transfer is consistent with perineal proximity —
+[vaginal and rectal GBS loads are tightly correlated](https://jcgo.org/index.php/jcgo/article/view/205/76)
+(mean difference 0.77 log), vaginal-perineal screening performs nearly as well as vaginal-rectal, and
+[*E. coli* early-onset-sepsis isolates match maternal vaginal-carriage strains](https://pmc.ncbi.nlm.nih.gov/articles/PMC13272159/) —
+so hygiene and perineal contamination plausibly modulate it. Translationally the moment is unusually
+favorable: **Pfizer's hexavalent maternal GBS conjugate vaccine (GBS6) is in global Phase 3**
+([BEATRIX, NCT07160244, 2025–2028](https://pmc.ncbi.nlm.nih.gov/articles/PMC13472963/); Phase 1/2 safe
+and immunogenic with antibody transfer to infants). Resolving *which serotypes/clones actually transmit
+rectum→vagina* directly informs vaccine serotype coverage and the populations that benefit most.
+
 ## B. Innovation
 
 - **First in-situ, strain-resolved, longitudinal** demonstration of rectovaginal transmission in

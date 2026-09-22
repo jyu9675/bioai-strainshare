@@ -175,6 +175,11 @@ egress-free) rather than downloaded. Paired sample map: `~/hmp/paired_women2.tsv
   settings; microbiome-directed approaches (e.g. *Lactobacillus* live biotherapeutics — the Kwon Lab's
   own area) are research-stage. **All treatment decisions require a clinician; the study generates the
   evidence, not the prescription.**
+- **Vaccine relevance (timely):** a hexavalent maternal GBS conjugate vaccine (**GBS6**, Pfizer) is now in
+  **global Phase 3** ([BEATRIX, NCT07160244, 2025–2028](https://pmc.ncbi.nlm.nih.gov/articles/PMC13472963/)).
+  By resolving *which serotypes/clones (e.g. CC17/serotype III) actually move rectum→vagina and reach the
+  neonate*, this study informs **vaccine serotype coverage** and which populations benefit most — connecting
+  the mechanism directly to an active prevention pipeline.
 
 ## 9. Limitations & feasibility
 
