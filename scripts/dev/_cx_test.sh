@@ -20,7 +20,7 @@ tail -n +2 "$PICK" | tr -d '\r' | while IFS=$'\t' read -r sample subject site rc
     dest="$OUT/fastq/${sample}_${f}.fq.gz"; tries=0
     while ! gzip -t "$dest" 2>/dev/null; do
       tries=$((tries+1)); [ $tries -gt 5 ] && { ok=0; break; }
-      [ $tries -ge 2 ] && rm -f "$dest"          # full re-download if resume didn't fix it
+      [ $tries -ge 2 ] && { rm -f "$dest"; sleep "${DL_RETRY_SLEEP:-8}"; }  # pause before re-download — avoids rate-limit cascade
       wget -q -c --timeout=180 --tries=3 -O "$dest" "$url" || true
     done
     [ $ok = 0 ] && break
