@@ -1,0 +1,16 @@
+genome	between_shared_rate	n_between_shared	n_between_pairs	is_generalist
+Streptococcus_agalactiae.fna	1.0	1	1	True
+L_crispatus.fna	0.25	1	4	True
+Prevotella_amnii.fna	0.05555555555555555	2	36	False
+L_iners.fna	0.0546218487394958	13	238	False
+Megasphaera_lornae.fna	0.05333333333333334	4	75	False
+Aerococcus_christensenii.fna	0.047619047619047616	1	21	False
+Gardnerella_leopoldii.fna	0.028846153846153848	3	104	False
+Fannyhessea_vaginae.fna	0.027522935779816515	3	109	False
+Sneathia_vaginalis.fna	0.023809523809523808	1	42	False
+Gardnerella_swidsinskii.fna	0.017241379310344827	1	58	False
+G_vaginalis.fna	0.014018691588785047	3	214	False
+Gardnerella_piotii.fna	0.008849557522123894	1	113	False
+Lactobacillus_gasseri.fna	0.0	0	1	False
+P_bivia.fna	0.0	0	3	False
+Prevotella_disiens.fna	0.0	0	3	False
