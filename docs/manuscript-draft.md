@@ -1,6 +1,6 @@
 # strainshare: a standardized, contamination-aware framework for gut–cervicovaginal bacterial strain sharing, with an empirically characterized resolution limit
 
-**Authors:** Jean Yu¹, [Kwon Lab collaborators]², Douglas S. Kwon²
+**Authors:** Jean Yu¹, [Kwon Lab collaborators]² *(senior/PI author pending permission)*
 ¹ [affiliation] · ² Ragon Institute of Mass General Brigham, MIT, and Harvard
 
 *Draft v0.1 — generated from the analyses in this repository (github.com/jyu9675/bioai-strainshare).

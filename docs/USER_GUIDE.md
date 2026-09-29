@@ -234,4 +234,4 @@ pip install .
 
 - **Full reference:** [`README.md`](../README.md), [`install.md`](install.md), [`tutorial.md`](tutorial.md)
 - **Report a problem:** open an Issue at https://github.com/jyu9675/bioai-strainshare/issues
-- **Cite it:** Yu J., Kwon D.S. *strainshare*. Zenodo. https://doi.org/10.5281/zenodo.22275588
+- **Cite it:** Yu J. *strainshare*. Zenodo. https://doi.org/10.5281/zenodo.22275588
