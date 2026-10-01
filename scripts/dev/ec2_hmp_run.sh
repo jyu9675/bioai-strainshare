@@ -37,13 +37,13 @@ if [ ! -d "$HOME/mf" ]; then
 fi
 source "$HOME/mf/etc/profile.d/conda.sh"
 CREATE=mamba; command -v mamba >/dev/null 2>&1 || CREATE=conda
+# Pin a MODERN inStrain explicitly via conda (prebuilt, no compiler needed). An unconstrained
+# `instrain` resolves to the ancient 1.3.4 that crashes on modern Biopython; installing it via pip
+# instead tries to compile biopython from source and fails when gcc is absent — so: conda + >=1.9.
 conda env list | grep -q "^hmp " || $CREATE create -y -n hmp -c bioconda -c conda-forge \
-  bowtie2 samtools awscli pandas 'python=3.11' git
+  bowtie2 samtools awscli pandas git 'instrain>=1.9'
 conda activate hmp
-# inStrain via pip to guarantee a modern version — bioconda's default resolves to an ancient 1.3.4
-# that crashes on modern Biopython (ModuleNotFoundError: Bio.codonalign.codonalphabet).
-python -c "import inStrain" 2>/dev/null || pip install -q "instrain>=1.9"
-pip install -q -U "instrain>=1.9"
+python -c "import inStrain" 2>/dev/null || $CREATE install -y -n hmp -c bioconda -c conda-forge 'instrain>=1.9'
 
 echo "[ec2] === 2/4 repo ==="
 [ -d "$REPO/.git" ] || git clone https://github.com/jyu9675/bioai-strainshare.git "$REPO"
