@@ -37,13 +37,19 @@ if [ ! -d "$HOME/mf" ]; then
 fi
 source "$HOME/mf/etc/profile.d/conda.sh"
 CREATE=mamba; command -v mamba >/dev/null 2>&1 || CREATE=conda
-# Pin a MODERN inStrain explicitly via conda (prebuilt, no compiler needed). An unconstrained
-# `instrain` resolves to the ancient 1.3.4 that crashes on modern Biopython; installing it via pip
-# instead tries to compile biopython from source and fails when gcc is absent — so: conda + >=1.9.
+# inStrain is installed via PIP (modern >=1.9), NOT conda: bioconda's unconstrained `instrain`
+# resolves to the ancient 1.3.4 that crashes on modern Biopython, and pinning `instrain>=1.9` in
+# conda deadlocks the solver (its old biopython needs python<=3.8, conflicting with recent tools).
+# pip builds biopython from source, so ensure a C toolchain first.
+if ! command -v gcc >/dev/null 2>&1; then
+  sudo DEBIAN_FRONTEND=noninteractive apt-get update -y >/dev/null 2>&1 || true
+  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential >/dev/null 2>&1 || true
+fi
+# conda env with just the mapping tools (fast, clean solve); python 3.10 so pip's biopython is happy
 conda env list | grep -q "^hmp " || $CREATE create -y -n hmp -c bioconda -c conda-forge \
-  bowtie2 samtools awscli pandas git 'instrain>=1.9'
+  bowtie2 samtools awscli pandas git 'python=3.10'
 conda activate hmp
-python -c "import inStrain" 2>/dev/null || $CREATE install -y -n hmp -c bioconda -c conda-forge 'instrain>=1.9'
+python -c "import inStrain" 2>/dev/null || pip install -q "instrain>=1.9"
 
 echo "[ec2] === 2/4 repo ==="
 [ -d "$REPO/.git" ] || git clone https://github.com/jyu9675/bioai-strainshare.git "$REPO"
