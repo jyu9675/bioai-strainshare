@@ -38,8 +38,12 @@ fi
 source "$HOME/mf/etc/profile.d/conda.sh"
 CREATE=mamba; command -v mamba >/dev/null 2>&1 || CREATE=conda
 conda env list | grep -q "^hmp " || $CREATE create -y -n hmp -c bioconda -c conda-forge \
-  bowtie2 samtools instrain awscli pandas 'python=3.11' git
+  bowtie2 samtools awscli pandas 'python=3.11' git
 conda activate hmp
+# inStrain via pip to guarantee a modern version — bioconda's default resolves to an ancient 1.3.4
+# that crashes on modern Biopython (ModuleNotFoundError: Bio.codonalign.codonalphabet).
+python -c "import inStrain" 2>/dev/null || pip install -q "instrain>=1.9"
+pip install -q -U "instrain>=1.9"
 
 echo "[ec2] === 2/4 repo ==="
 [ -d "$REPO/.git" ] || git clone https://github.com/jyu9675/bioai-strainshare.git "$REPO"

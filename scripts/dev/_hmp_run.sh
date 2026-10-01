@@ -70,8 +70,10 @@ tail -n +2 "$MANIFEST" | while IFS=$'\t' read -r sample subject timepoint bodysi
   # with --pairing_filter all_reads downstream so per-read mapping is the robust choice.
   bowtie2 -x "$REF" -U "$reads" -p "$THREADS" 2>"$OUT/profiles/$sample.bt2.log" \
     | samtools sort -@ 2 -o "$OUT/profiles/$sample.bam" - && samtools index "$OUT/profiles/$sample.bam"
+  # NOTE: NOT --database_mode. For a small reference it stores a reduced profile (no covT) that
+  # inStrain compare then cannot read (KeyError 'covT'); the standard full profile is what compare needs.
   inStrain profile "$OUT/profiles/$sample.bam" "$REF.fna" -o "$IS" -s "$REF.stb" \
-    -p "$THREADS" --database_mode --pairing_filter all_reads >"$OUT/profiles/$sample.IS.log" 2>&1
+    -p "$THREADS" --pairing_filter all_reads >"$OUT/profiles/$sample.IS.log" 2>&1
 
   if ls "$IS/output/"*genome_info.tsv >/dev/null 2>&1; then
     touch "$IS/.done"
@@ -92,7 +94,7 @@ echo "[hmp] profiling loop done $(date +%T)"
 # ---- 3. compare + strainshare analyze ---------------------------------------------------
 echo "[hmp] inStrain compare"
 inStrain compare -i "$OUT"/profiles/*.IS -o "$OUT/compare.IS" -s "$REF.stb" \
-  -p "$THREADS" --database_mode >"$OUT/compare.log" 2>&1 || true
+  -p "$THREADS" >"$OUT/compare.log" 2>&1 || true
 GW=$(find "$OUT/compare.IS/output" -name "*genomeWide_compare.tsv" 2>/dev/null | head -1 || true)
 [ -n "${GW:-}" ] && cp "$GW" "$OUT/genomeWide_compare.tsv"
 
