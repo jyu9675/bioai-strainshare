@@ -68,8 +68,11 @@ tail -n +2 "$MANIFEST" | while IFS=$'\t' read -r sample subject timepoint bodysi
 
   # UNPAIRED mapping (-U): HMASM reads are human-screened, which desyncs mates; inStrain runs
   # with --pairing_filter all_reads downstream so per-read mapping is the robust choice.
-  bowtie2 -x "$REF" -U "$reads" -p "$THREADS" 2>"$OUT/profiles/$sample.bt2.log" \
-    | samtools sort -@ 2 -o "$OUT/profiles/$sample.bam" - && samtools index "$OUT/profiles/$sample.bam"
+  # --no-unal: drop unmapped reads. Only a tiny fraction of a stool metagenome maps to the 33-genome
+  # target reference, so without this samtools sorts tens of millions of unmapped records per sample
+  # (hours of needless work + huge BAMs); inStrain only ever uses the mapped reads.
+  bowtie2 -x "$REF" -U "$reads" -p "$THREADS" --no-unal 2>"$OUT/profiles/$sample.bt2.log" \
+    | samtools sort -@ 4 -o "$OUT/profiles/$sample.bam" - && samtools index "$OUT/profiles/$sample.bam"
   # NOTE: NOT --database_mode. For a small reference it stores a reduced profile (no covT) that
   # inStrain compare then cannot read (KeyError 'covT'); the standard full profile is what compare needs.
   inStrain profile "$OUT/profiles/$sample.bam" "$REF.fna" -o "$IS" -s "$REF.stb" \
