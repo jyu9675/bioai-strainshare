@@ -64,3 +64,4 @@ dist/
 # scratch: ENA metadata dumps + dataset pick files (root-level)
 /_*.tsv
 /_*.csv
+results_hmp_ec2/
