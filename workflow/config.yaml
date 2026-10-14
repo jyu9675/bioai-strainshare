@@ -1,0 +1,18 @@
+# strainshare Snakemake workflow config — copy and edit for your cohort.
+
+# Sample sheet: TSV with columns  sample  subject  timepoint  bodysite  fq1  fq2
+samples: workflow/samples.tsv
+
+# Where outputs go
+results_dir: results
+
+# Reference prefix. These must exist:
+#   <refs_prefix>.fna         (concatenated, dereplicated target genomes)
+#   <refs_prefix>.stb         (scaffold-to-bin map; parse_stb.py --reverse ...)
+#   <refs_prefix>.*.bt2       (bowtie2 index; bowtie2-build <refs_prefix>.fna <refs_prefix>)
+refs_prefix: refs/vagref
+
+threads: 8
+
+# Threshold standard (optional). Omit to use the built-in strainshare defaults.
+standard: strainshare/strainshare_standard.yaml

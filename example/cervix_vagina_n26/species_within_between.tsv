@@ -1,0 +1,17 @@
+genome	within_shared_rate	within_n_shared	within_n_pairs	between_shared_rate	between_n_shared	between_n_pairs	within_minus_between
+Mobiluncus_curtisii.fna	1.0	1.0	1.0	0.0	0.0	0.0	1.0
+P_bivia.fna	1.0	1.0	1.0	0.0	0.0	3.0	1.0
+Gardnerella_piotii.fna	1.0	8.0	8.0	0.008849557522123894	1.0	113.0	0.9911504424778761
+Gardnerella_swidsinskii.fna	1.0	6.0	6.0	0.017241379310344827	1.0	58.0	0.9827586206896551
+Sneathia_vaginalis.fna	1.0	6.0	6.0	0.023809523809523808	1.0	42.0	0.9761904761904762
+Aerococcus_christensenii.fna	1.0	3.0	3.0	0.047619047619047616	1.0	21.0	0.9523809523809523
+Megasphaera_lornae.fna	1.0	6.0	6.0	0.05333333333333334	4.0	75.0	0.9466666666666667
+L_iners.fna	1.0	14.0	14.0	0.0546218487394958	13.0	238.0	0.9453781512605042
+Prevotella_amnii.fna	1.0	6.0	6.0	0.05555555555555555	2.0	36.0	0.9444444444444444
+G_vaginalis.fna	0.9	9.0	10.0	0.014018691588785047	3.0	214.0	0.885981308411215
+Fannyhessea_vaginae.fna	0.875	7.0	8.0	0.027522935779816515	3.0	109.0	0.8474770642201834
+Gardnerella_leopoldii.fna	0.875	7.0	8.0	0.028846153846153848	3.0	104.0	0.8461538461538461
+L_crispatus.fna	1.0	2.0	2.0	0.25	1.0	4.0	0.75
+Lactobacillus_gasseri.fna	0.0	0.0	0.0	0.0	0.0	1.0	0.0
+Prevotella_disiens.fna	0.0	0.0	0.0	0.0	0.0	3.0	0.0
+Streptococcus_agalactiae.fna	0.0	0.0	0.0	1.0	1.0	1.0	-1.0

@@ -1,0 +1,10 @@
+# Normalize line endings. Critical: shell scripts must stay LF so they run on
+# WSL2 / Linux / HPC even when cloned on Windows (CRLF breaks the shebang).
+* text=auto eol=lf
+*.sh   text eol=lf
+*.py   text eol=lf
+*.yml  text eol=lf
+*.tsv  text eol=lf
+
+# Binary — never touch
+*.png  binary

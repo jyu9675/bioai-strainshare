@@ -1,0 +1,11 @@
+pair	coverage	truth	popANI	percent_genome_compared	evaluable	called_shared	correct
+sameA_c0p5|sameB_c0p5	0.5	same			False	False	False
+sameA_c0p5|diff_c0p5	0.5	diff			False	False	True
+sameA_c2|sameB_c2	2.0	same			False	False	False
+sameA_c2|diff_c2	2.0	diff			False	False	True
+sameA_c5|sameB_c5	5.0	same	1.0	0.2967558168955244	False	False	False
+sameA_c5|diff_c5	5.0	diff	0.9970550679289996	0.2983729560204844	False	False	True
+sameA_c10|sameB_c10	10.0	same	1.0	0.924800578992686	True	True	True
+sameA_c10|diff_c10	10.0	diff	0.9970666309754846	0.9232197249784742	True	False	True
+sameA_c30|sameB_c30	30.0	same	1.0	0.9998774151663916	True	True	True
+sameA_c30|diff_c30	30.0	diff	0.9971099739981032	0.9998421107343126	True	False	True

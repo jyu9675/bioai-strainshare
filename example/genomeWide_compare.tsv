@@ -1,0 +1,7 @@
+genome	name1	name2	popANI	conANI	percent_genome_compared
+Lactobacillus_crispatus	S1_vagina_30	S1_gut_30	0.99995	0.99995	0.8
+Lactobacillus_crispatus	S2_vagina_30	S2_gut_30	0.99995	0.99995	0.8
+Lactobacillus_crispatus	S1_vagina_30	S2_gut_30	0.997	0.997	0.8
+Gardnerella_vaginalis	S3_vagina_30	S3_gut_30	0.99996	0.99996	0.8
+Lactobacillus_iners	S1_vagina_12	S1_vagina_30	0.99999	0.99999	0.8
+Prevotella_bivia	S1_gut_30	S2_gut_30	0.995	0.995	0.8
